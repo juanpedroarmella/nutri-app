@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "@/common/components/ui/button";
 
 export default function DeployButton() {
   return (
@@ -17,7 +17,7 @@ export default function DeployButton() {
           >
             <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="inherit" />
           </svg>
-          <span>Deploy to Vercel</span>
+          <span>Desplegar en Vercel</span>
         </Button>
       </Link>
     </>

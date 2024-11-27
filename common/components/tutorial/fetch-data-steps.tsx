@@ -49,18 +49,18 @@ export default function FetchDataSteps() {
     <ol className="flex flex-col gap-6">
       <TutorialStep title="Create some tables and insert some data">
         <p>
-          Head over to the{" "}
+          Ve a la{" "}
           <a
             href="https://supabase.com/dashboard/project/_/editor"
             className="font-bold hover:underline text-foreground/80"
             target="_blank"
             rel="noreferrer"
           >
-            Table Editor
+            Editor de tablas
           </a>{" "}
-          for your Supabase project to create a table and insert some example
-          data. If you're stuck for creativity, you can copy and paste the
-          following into the{" "}
+          para tu proyecto de Supabase para crear una tabla y insertar algunos
+          datos de ejemplo. Si no tienes creatividad, puedes copiar y pegar lo
+          siguiente en el{" "}
           <a
             href="https://supabase.com/dashboard/project/_/sql/new"
             className="font-bold hover:underline text-foreground/80"
@@ -69,27 +69,27 @@ export default function FetchDataSteps() {
           >
             SQL Editor
           </a>{" "}
-          and click RUN!
+          y haz clic en Ejecutar!
         </p>
         <CodeBlock code={create} />
       </TutorialStep>
 
-      <TutorialStep title="Query Supabase data from Next.js">
+      <TutorialStep title="Consultar datos de Supabase desde Next.js">
         <p>
-          To create a Supabase client and query data from an Async Server
-          Component, create a new page.tsx file at{" "}
+          Para crear un cliente de Supabase y consultar datos desde un componente
+          de servidor asíncrono, crea un nuevo archivo page.tsx en{" "}
           <span className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-xs font-medium text-secondary-foreground border">
             /app/notes/page.tsx
           </span>{" "}
-          and add the following.
+          y añade lo siguiente.
         </p>
         <CodeBlock code={server} />
-        <p>Alternatively, you can use a Client Component.</p>
+        <p>O bien, puedes usar un componente de cliente.</p>
         <CodeBlock code={client} />
       </TutorialStep>
 
-      <TutorialStep title="Build in a weekend and scale to millions!">
-        <p>You're ready to launch your product to the world! 🚀</p>
+      <TutorialStep title="¡Construye en un fin de semana y escala a millones!">
+        <p>¡Estás listo para lanzar tu producto al mundo! 🚀</p>
       </TutorialStep>
     </ol>
   );
