@@ -1,59 +1,34 @@
-import { Card, CardContent, CardHeader } from '@/common/components/ui/card'
-import { User } from '@/common/types/user.types'
-import { createClient } from '@/common/utils/supabase/server'
-import CreateUserComponent from '@/features/users/components/create-user.component'
+import ListUserComponent from '@/features/users/components/list-user.component'
+import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/ui/card'
+import { Separator } from '@/common/components/ui/separator'
+import { UsersIcon } from 'lucide-react'
+import CreateUserDialog from '@/features/users/components/dialogs/create-user-dialog.component'
 
 export default async function AdminPage() {
-  const supabase = await createClient()
-  const { data: users, error } = await supabase
-    .from('users')
-    .select(
-      `
-      id,
-      first_name,
-      last_name,
-      role,
-      email
-    `
-    )
-    .returns<User[]>()
-
   return (
-    <div className='flex-1 w-full flex flex-col gap-6 p-4'>
-      <h1 className='text-2xl font-bold'>Panel de Administración</h1>
-
+    <div className='flex-1 w-full flex flex-col gap-6 p-6 max-w-7xl mx-auto'>
       <Card>
         <CardHeader>
-          <h2 className='text-xl'>Usuarios</h2>
-        </CardHeader>
-        <CardContent>
-          <div className='flex flex-col gap-4'>
-            {users?.map(user => (
-              <div
-                key={user.id}
-                className='flex items-center justify-between p-4 border rounded'
-              >
-                <div>
-                  <p className='text-sm text-muted-foreground'>
-                    Rol: {user.role}
-                  </p>
-                  <p className='text-sm text-muted-foreground'>
-                    Email: {user.email}
-                  </p>
-                  <p className='text-sm text-muted-foreground'>
-                    Nombre: {user.first_name}
-                  </p>
-                  <p className='text-sm text-muted-foreground'>
-                    Apellido: {user.last_name}
-                  </p>
-                </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <UsersIcon className="w-6 h-6 text-primary" />
               </div>
-            ))}
+              <div>
+                <CardTitle>Panel de Administración</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Gestiona los usuarios del sistema
+                </p>
+              </div>
+            </div>
+            <CreateUserDialog />
           </div>
+        </CardHeader>
+        <Separator />
+        <CardContent className="pt-6">
+          <ListUserComponent />
         </CardContent>
       </Card>
-
-      <CreateUserComponent />
     </div>
   )
 }

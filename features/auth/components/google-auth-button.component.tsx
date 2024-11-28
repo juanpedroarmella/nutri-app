@@ -3,9 +3,11 @@ import GoogleIcon from '@/common/icons/google.icon'
 import { Button } from '@/common/components/ui/button'
 import { FC } from 'react'
 import { createClient } from '@/common/utils/supabase/client'
+import { useToast } from '@/common/hooks/use-toast'
 
 const GoogleAuthButton: FC = () => {
   const supabase = createClient()
+  const { toast } = useToast()
 
   const handleGoogleAuth = async () => {
     try {
@@ -17,6 +19,11 @@ const GoogleAuthButton: FC = () => {
       })
     } catch (error) {
       console.error('Error during Google authentication:', error)
+      toast({
+        variant: 'destructive',
+        title: 'Error de autenticación',
+        description: 'Hubo un problema al intentar iniciar sesión con Google'
+      })
     }
   }
 
