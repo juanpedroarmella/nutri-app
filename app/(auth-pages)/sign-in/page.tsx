@@ -13,12 +13,6 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
     <Card className='w-full max-w-[500px] min-w-[256px] mx-auto'>
       <CardHeader>
         <h1 className='text-2xl font-medium'>Iniciar sesión</h1>
-        <p className='text-sm text-muted-foreground'>
-          No tienes una cuenta?{' '}
-          <Link className='text-primary font-medium underline' href='/sign-up'>
-            Registrarse
-          </Link>
-        </p>
       </CardHeader>
       <CardContent>
         <form className='flex flex-col gap-4'>

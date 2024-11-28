@@ -34,36 +34,40 @@ export default async function AuthButton() {
             >
               <Link href="/sign-in">Iniciar sesión</Link>
             </Button>
-            <Button
-              asChild
-              size="sm"
-              variant={"default"}
-              disabled
-              className="opacity-75 cursor-none pointer-events-none"
-            >
-              <Link href="/sign-up">Registrarse</Link>
-            </Button>
           </div>
         </div>
       </>
     );
   }
-  return user ? (
-    <div className="flex items-center gap-4">
-      Hey, {user.email}!
-      <form action={signOutAction}>
-        <Button type="submit" variant={"outline"}>
-          Cerrar sesión
-        </Button>
-      </form>
-    </div>
-  ) : (
+
+  if (user) {
+    const { data: userData } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    return (
+      <div className="flex items-center gap-4">
+        Hey, {user.email}!
+        {userData?.role === 'admin' && (
+          <Button asChild variant="outline">
+            <Link href="/admin">Panel Admin</Link>
+          </Button>
+        )}
+        <form action={signOutAction}>
+          <Button type="submit" variant="outline">
+            Cerrar sesión
+          </Button>
+        </form>
+      </div>
+    );
+  }
+
+  return (
     <div className="flex gap-2">
-      <Button asChild size="sm" variant={"outline"}>
-        <Link href="/sign-in">Iniciar sesión</Link>
-      </Button>
       <Button asChild size="sm" variant={"default"}>
-        <Link href="/sign-up">Registrarse</Link>
+        <Link href="/sign-in">Iniciar sesión</Link>
       </Button>
     </div>
   );
