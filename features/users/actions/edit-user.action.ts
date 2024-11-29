@@ -1,19 +1,18 @@
 'use server'
 
 import { User } from '@/common/types/user.types'
-import { AuthService } from '@/features/auth/services/auth.service'
+import { authService } from '@/features/auth/services/auth.service'
 import { revalidatePath } from 'next/cache'
-import { UserService } from '../service/user-service'
+import { userService } from '../service/user-service'
+import { AdminRoutes } from '@/common/types/routes.types'
 
 export async function editUser(userId: string, data: Partial<User>) {
-  const userService = new UserService()
   const currentUser = await userService.getCurrentUser()
 
   if (!currentUser) {
     return { error: 'Usuario no autenticado' }
   }
 
-  const authService = new AuthService()
 
   const isAdmin = await authService.isCurrentUserAdmin()
 
@@ -30,7 +29,7 @@ export async function editUser(userId: string, data: Partial<User>) {
     return { error: authError.message }
   }
 
-  revalidatePath('/admin')
+  revalidatePath(AdminRoutes.HOME)
 
-  return { redirect: '/admin' }
+  return { redirect: AdminRoutes.HOME }
 }

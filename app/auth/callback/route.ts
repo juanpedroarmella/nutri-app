@@ -1,7 +1,7 @@
 import { AuthRoutes } from '@/common/types/routes.types'
 import { createClient } from '@/common/utils/supabase/server'
-import { AuthService } from '@/features/auth/services/auth.service'
-import { UserService } from '@/features/users/service/user-service'
+import { authService, AuthService } from '@/features/auth/services/auth.service'
+import { userService, UserService } from '@/features/users/service/user-service'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -10,7 +10,6 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin
 
   if (code) {
-    const authService = new AuthService()
 
     // Intercambiar el código por una sesión
     const {
@@ -24,7 +23,6 @@ export async function GET(request: Request) {
       )
     }
 
-    const userService = new UserService()
 
     // Verificar si el usuario existe en nuestra tabla de usuarios
     const { data: userData, error: userError } =

@@ -3,8 +3,21 @@ import { UserRepository } from '../repository/user.repository'
 import { User } from '@/common/types/user.types'
 
 export class UserService {
-  private readonly userRepository = new UserRepository()
-  private readonly authRepository = new AuthRepository()
+  private static instance: UserService | null = null
+  private readonly userRepository: UserRepository
+  private readonly authRepository: AuthRepository
+
+  private constructor() {
+    this.userRepository = new UserRepository()
+    this.authRepository = new AuthRepository()
+  }
+
+  public static getInstance(): UserService {
+    if (!UserService.instance) {
+      UserService.instance = new UserService()
+    }
+    return UserService.instance
+  }
 
   async getUsers() {
     return await this.userRepository.getUsers()
@@ -28,10 +41,6 @@ export class UserService {
     return await this.userRepository.editUser(userId, data)
   }
 
-  async deleteUser(userId: string) {
-    return await this.userRepository.deleteUser(userId)
-  }
-
   async getUserByAuthId(userId: string) {
     return await this.userRepository.getUserByAuthId(userId)
   }
@@ -40,3 +49,5 @@ export class UserService {
     return await this.userRepository.getUserByEmail(email)
   }
 }
+
+export const userService = UserService.getInstance()

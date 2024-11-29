@@ -9,12 +9,11 @@ import {
 } from '@/common/components/ui/table'
 
 import { Badge } from '@/common/components/ui/badge'
-import { UserService } from '../service/user-service'
+import { userService, UserService } from '../service/user-service'
 import DeleteUserDialog from './dialogs/delete-user-dialog.component'
 import EditUserDialog from './dialogs/edit-user-dialog.component'
 
 export default async function ListUserComponent() {
-  const userService = new UserService()
 
   const { data: users } = await userService.getUsers()
   const currentUser = await userService.getCurrentUser()
@@ -59,9 +58,9 @@ export default async function ListUserComponent() {
                   <div className='flex justify-center gap-2'>
                     <EditUserDialog user={user} />
                     <DeleteUserDialog
-                      userId={user.id}
+                      userId={user.id_auth}
                       currentUser={currentUser}
-                      disabled={currentUser?.id === user.id}
+                      disabled={currentUser?.id === user.id_auth}
                     />
                   </div>
                 </TableCell>

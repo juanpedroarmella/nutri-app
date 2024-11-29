@@ -1,15 +1,12 @@
 import { hasEnvVars } from '@/common/utils/supabase/check-env-vars'
+import { signOutAction } from '@/features/auth/actions/sing-out.action'
+import { authService } from '@/features/auth/services/auth.service'
+import { userService } from '@/features/users/service/user-service'
 import Link from 'next/link'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
-import { createClient } from '@/common/utils/supabase/server'
-import { signOutAction } from '@/features/auth/actions/sing-out.action'
-import { AuthService } from '@/features/auth/services/auth.service'
-import { UserService } from '@/features/users/service/user-service'
 
 export default async function AuthButton() {
-  const authService = new AuthService()
-
   const user = await authService.getCurrentUser()
 
   if (!hasEnvVars) {
@@ -42,7 +39,6 @@ export default async function AuthButton() {
   }
 
   if (user) {
-    const userService = new UserService()
     const userData = await userService.getUser(user.id)
 
     return (

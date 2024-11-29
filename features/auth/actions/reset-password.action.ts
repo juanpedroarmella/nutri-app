@@ -1,11 +1,8 @@
 'use server'
 
-import { createClient } from '@/common/utils/supabase/server'
-import { AuthService } from '../services/auth.service'
+import { authService } from '../services/auth.service'
 
 export const resetPasswordAction = async (formData: FormData) => {
-  const supabase = await createClient()
-
   const password = formData.get('password') as string
   const confirmPassword = formData.get('confirmPassword') as string
 
@@ -23,7 +20,6 @@ export const resetPasswordAction = async (formData: FormData) => {
     }
   }
 
-  const authService = new AuthService()
   const { error } = await authService.editMe({
     password: password
   })
@@ -40,4 +36,3 @@ export const resetPasswordAction = async (formData: FormData) => {
     message: 'Password updated'
   }
 }
-

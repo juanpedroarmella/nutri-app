@@ -1,13 +1,10 @@
 'use server'
 
-import { AuthRepository } from '@/features/auth/repository/auth.repository'
-import { UserRepository } from '../repository/user.repository'
+import { AdminRoutes } from '@/common/types/routes.types'
+import { authService } from '@/features/auth/services/auth.service'
 import { revalidatePath } from 'next/cache'
-import { AuthService } from '@/features/auth/services/auth.service'
-import { UserService } from '../service/user-service'
 
-export async function deleteUser(userId: string) {
-  const authService = new AuthService()
+export async function deleteUser(authId: string) {
   const currentUser = await authService.getCurrentUser()
 
   if (!currentUser) {
@@ -21,23 +18,19 @@ export async function deleteUser(userId: string) {
     return { error: 'No tienes permisos para eliminar usuarios' }
   }
 
-  console.log('currentUser', currentUser)
-  console.log('userId', userId)
-
   // Prevenir que un admin se elimine a sí mismo
-  if (currentUser.id === userId) {
+  if (currentUser.id === authId) {
     return { error: 'No puedes eliminarte a ti mismo' }
   }
 
-  const userService = new UserService()
-  const { error: deleteError } = await userService.deleteUser(userId)
+  const { error: deleteError } = await authService.deleteUser(authId)
 
   if (deleteError) {
     console.error('Delete Error:', deleteError)
     return { error: deleteError.message }
   }
 
-  revalidatePath('/admin')
+  revalidatePath(AdminRoutes.HOME)
 
-  return { redirect: '/admin' }
+  return { redirect: AdminRoutes.HOME }
 }

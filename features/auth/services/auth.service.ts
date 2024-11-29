@@ -3,8 +3,21 @@ import { UserRepository } from '@/features/users/repository/user.repository'
 import { AuthRepository } from '../repository/auth.repository'
 
 export class AuthService {
-  private readonly authRepository = new AuthRepository()
-  private readonly userRepository = new UserRepository()
+  private static instance: AuthService | null = null
+  private readonly authRepository: AuthRepository
+  private readonly userRepository: UserRepository
+
+  private constructor() {
+    this.authRepository = new AuthRepository()
+    this.userRepository = new UserRepository()
+  }
+
+  public static getInstance(): AuthService {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService()
+    }
+    return AuthService.instance
+  }
 
   async getCurrentUser() {
     return await this.authRepository.getCurrentUser()
@@ -30,7 +43,6 @@ export class AuthService {
     role: string
   }) {
     const password = this.getDefaultPassword(data.email)
-
     return await this.authRepository.createUser({ ...data, password })
   }
 
@@ -52,4 +64,10 @@ export class AuthService {
   async exchangeCodeForSession(code: string) {
     return await this.authRepository.exchangeCodeForSession(code)
   }
+
+  async deleteUser(userId: string) {
+    return await this.authRepository.deleteUser(userId)
+  }
 }
+
+export const authService = AuthService.getInstance()

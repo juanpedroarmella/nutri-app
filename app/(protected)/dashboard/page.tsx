@@ -1,10 +1,9 @@
 import { AuthRoutes } from '@/common/types/routes.types'
-import { AuthService } from '@/features/auth/services/auth.service'
+import { authService } from '@/features/auth/services/auth.service'
 import { InfoIcon } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
 export default async function ProtectedPage() {
-  const authService = new AuthService()
 
   const user = await authService.getCurrentUser()
 

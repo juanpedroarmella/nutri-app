@@ -33,7 +33,7 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
     startTransition(async () => {
       try {
         const data = {
-          email: formData.get('email') as string,
+          email: user.email,
           first_name: formData.get('name') as string,
           last_name: formData.get('surname') as string,
           role: roleRef.current
@@ -97,7 +97,7 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
           type='email'
           name='email'
           placeholder='Email'
-          defaultValue={user.email}
+          value={user.email}
           disabled
           required
         />

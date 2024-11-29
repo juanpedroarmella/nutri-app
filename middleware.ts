@@ -1,8 +1,7 @@
 import { type NextRequest } from 'next/server'
 import { AuthRoutes, ProtectedRoutes } from '@/common/types/routes.types'
-import { AuthRepository } from '@/features/auth/repository/auth.repository'
 import { NextResponse } from 'next/server'
-import { AuthService } from './features/auth/services/auth.service'
+import { authService } from './features/auth/services/auth.service'
 import { refreshSession } from './features/auth/session/auth.session'
 
 export async function middleware(request: NextRequest) {
@@ -19,7 +18,6 @@ export async function middleware(request: NextRequest) {
   } = await refreshSession(request, response)
   const currentPath = request.nextUrl.pathname
 
-  const authService = new AuthService()
 
   // 2. If user is authenticated and trying to access auth pages, redirect to appropriate route
   if (user && (currentPath === AuthRoutes.SIGN_IN || currentPath === '/')) {

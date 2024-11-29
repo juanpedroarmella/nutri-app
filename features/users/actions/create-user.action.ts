@@ -1,8 +1,7 @@
 'use server'
-import { AuthRepository } from '@/features/auth/repository/auth.repository'
-import { AuthService } from '@/features/auth/services/auth.service'
+import { AdminRoutes } from '@/common/types/routes.types'
+import { authService } from '@/features/auth/services/auth.service'
 import { revalidatePath } from 'next/cache'
-import { UserService } from '../service/user-service'
 
 export async function createUser({
   data
@@ -14,7 +13,6 @@ export async function createUser({
     role: string
   }
 }) {
-  const authService = new AuthService()
   const isAdmin = await authService.isCurrentUserAdmin()
 
   if (!isAdmin) {
@@ -28,7 +26,7 @@ export async function createUser({
     return { error: authError.message }
   }
 
-  revalidatePath('/admin')
+  revalidatePath(AdminRoutes.HOME)
 
-  return { redirect: '/admin' }
+  return { redirect: AdminRoutes.HOME }
 }

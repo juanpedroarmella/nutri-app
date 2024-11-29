@@ -30,12 +30,6 @@ export class UserRepository {
     return await supabase.from('users').update(data).eq('id', userId)
   }
 
-  async deleteUser(userId: string) {
-    const supabase = await createClient()
-
-    return await supabase.from('users').delete().eq('id', userId)
-  }
-
   async getUserByAuthId(userId: string) {
     const supabase = await createClient()
 
