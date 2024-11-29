@@ -4,6 +4,7 @@ import { Button } from '@/common/components/ui/button'
 import { FC } from 'react'
 import { createClient } from '@/common/utils/supabase/client'
 import { useToast } from '@/common/hooks/use-toast'
+import { AuthRoutes } from '@/common/types/routes.types'
 
 const GoogleAuthButton: FC = () => {
   const supabase = createClient()
@@ -14,7 +15,7 @@ const GoogleAuthButton: FC = () => {
       supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}${AuthRoutes.CALLBACK}`
         }
       })
     } catch (error) {

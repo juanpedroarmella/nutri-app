@@ -1,10 +1,13 @@
 'use server'
 
-import { UserRepository } from '@/features/users/repository/user.repository'
+import { UserService } from '@/features/users/service/user-service'
 
 export async function checkEmailExists(email: string) {
   try {
-    const { data: user } = await UserRepository.getUserByEmail(email)
+    const userService = new UserService()
+
+    const { data: user } = await userService.getUserByEmail(email)
+
     return { exists: !!user }
   } catch (error) {
     console.error('Error checking email:', error)

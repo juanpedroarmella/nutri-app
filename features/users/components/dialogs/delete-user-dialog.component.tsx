@@ -12,18 +12,18 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-  DialogDescription,
+  DialogDescription
 } from '@/common/components/ui/dialog'
-import { deleteUser } from '../../actions/delete-user.action'
 import { User } from '@/common/types/user.types'
+import { deleteUser } from '../../actions/delete-user.action'
 
-export default function DeleteUserDialog({ 
-  userId, 
+export default function DeleteUserDialog({
+  userId,
   currentUser,
-  disabled 
-}: { 
+  disabled
+}: {
   userId: string
-  currentUser: User
+  currentUser: User | null
   disabled: boolean
 }) {
   const [isPending, startTransition] = useTransition()
@@ -32,11 +32,11 @@ export default function DeleteUserDialog({
   const router = useRouter()
 
   const handleDelete = async () => {
-    if (userId === currentUser.id) {
+    if (userId === currentUser?.id) {
       toast({
-        variant: "destructive",
-        title: "Error",
-        description: "No puedes borrarte a ti mismo",
+        variant: 'destructive',
+        title: 'Error',
+        description: 'No puedes borrarte a ti mismo'
       })
       setOpen(false)
       return
@@ -48,22 +48,22 @@ export default function DeleteUserDialog({
 
         if (result.error) {
           toast({
-            variant: "destructive",
-            title: "Error",
-            description: result.error,
+            variant: 'destructive',
+            title: 'Error',
+            description: result.error
           })
         } else {
           toast({
-            title: "Usuario eliminado",
-            description: "El usuario ha sido eliminado exitosamente",
+            title: 'Usuario eliminado',
+            description: 'El usuario ha sido eliminado exitosamente'
           })
           router.refresh()
         }
       } catch (error) {
         toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Ocurrió un error al eliminar el usuario",
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Ocurrió un error al eliminar el usuario'
         })
       } finally {
         setOpen(false)
@@ -74,26 +74,24 @@ export default function DeleteUserDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive" size="icon" disabled={disabled}>
-          <Trash2 className="h-4 w-4" />
+        <Button variant='destructive' size='icon' disabled={disabled}>
+          <Trash2 className='h-4 w-4' />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Eliminar Usuario</DialogTitle>
           <DialogDescription>
-            ¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.
+            ¿Estás seguro de que quieres eliminar este usuario? Esta acción no
+            se puede deshacer.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setOpen(false)}
-          >
+          <Button variant='outline' onClick={() => setOpen(false)}>
             Cancelar
           </Button>
           <Button
-            variant="destructive"
+            variant='destructive'
             onClick={handleDelete}
             disabled={isPending}
           >
@@ -103,4 +101,4 @@ export default function DeleteUserDialog({
       </DialogContent>
     </Dialog>
   )
-} 
+}

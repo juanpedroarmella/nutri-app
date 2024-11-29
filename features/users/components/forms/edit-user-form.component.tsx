@@ -11,9 +11,9 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/common/components/ui/select'
-import { editUser } from '../../actions/edit-user.action'
 import { useToast } from '@/common/hooks/use-toast'
 import { Label } from '@/common/components/ui/label'
+import { editUser } from '../../actions/edit-user.action'
 
 interface EditUserFormProps {
   user: User
@@ -66,10 +66,10 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className='flex flex-col gap-4'>
-      <div className="space-y-2">
-        <Label htmlFor="name">Nombre</Label>
+      <div className='space-y-2'>
+        <Label htmlFor='name'>Nombre</Label>
         <Input
-          id="name"
+          id='name'
           type='text'
           name='name'
           placeholder='Nombre'
@@ -78,10 +78,10 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="surname">Apellido</Label>
+      <div className='space-y-2'>
+        <Label htmlFor='surname'>Apellido</Label>
         <Input
-          id="surname"
+          id='surname'
           type='text'
           name='surname'
           placeholder='Apellido'
@@ -90,10 +90,10 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+      <div className='space-y-2'>
+        <Label htmlFor='email'>Email</Label>
         <Input
-          id="email"
+          id='email'
           type='email'
           name='email'
           placeholder='Email'
@@ -103,15 +103,15 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="role">Rol</Label>
+      <div className='space-y-2'>
+        <Label htmlFor='role'>Rol</Label>
         <Select
           defaultValue={user.role}
           onValueChange={value => {
             roleRef.current = value as UserRole
           }}
         >
-          <SelectTrigger id="role">
+          <SelectTrigger id='role'>
             <SelectValue placeholder='Seleccionar rol' />
           </SelectTrigger>
           <SelectContent>

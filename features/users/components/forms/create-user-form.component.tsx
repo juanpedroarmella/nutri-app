@@ -65,53 +65,49 @@ export default function CreateUserForm({ onSuccess }: CreateUserFormProps) {
   }
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      className='flex flex-col gap-4'
-    >
-      <div className="space-y-2">
-        <Label htmlFor="name">Nombre</Label>
-        <Input 
-          id="name"
-          type='text' 
-          name='name' 
-          placeholder='Nombre' 
-          required 
+    <form ref={formRef} onSubmit={handleSubmit} className='flex flex-col gap-4'>
+      <div className='space-y-2'>
+        <Label htmlFor='name'>Nombre</Label>
+        <Input
+          id='name'
+          type='text'
+          name='name'
+          placeholder='Nombre'
+          required
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="surname">Apellido</Label>
-        <Input 
-          id="surname"
-          type='text' 
-          name='surname' 
-          placeholder='Apellido' 
-          required 
+      <div className='space-y-2'>
+        <Label htmlFor='surname'>Apellido</Label>
+        <Input
+          id='surname'
+          type='text'
+          name='surname'
+          placeholder='Apellido'
+          required
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input 
-          id="email"
-          type='email' 
-          name='email' 
-          placeholder='Email' 
-          required 
+      <div className='space-y-2'>
+        <Label htmlFor='email'>Email</Label>
+        <Input
+          id='email'
+          type='email'
+          name='email'
+          placeholder='Email'
+          required
         />
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="role">Rol</Label>
+      <div className='space-y-2'>
+        <Label htmlFor='role'>Rol</Label>
         <Select
           defaultValue='user'
           onValueChange={value => {
             roleRef.current = value
           }}
         >
-          <SelectTrigger id="role">
+          <SelectTrigger id='role'>
             <SelectValue placeholder='Seleccionar rol' />
           </SelectTrigger>
           <SelectContent>

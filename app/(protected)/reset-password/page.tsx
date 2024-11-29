@@ -1,9 +1,9 @@
 'use client'
-import { resetPasswordAction } from '@/app/actions'
 import { SubmitButton } from '@/common/components/submit-button'
 import { Input } from '@/common/components/ui/input'
 import { Label } from '@/common/components/ui/label'
 import { useToast } from '@/common/hooks/use-toast'
+import { resetPasswordAction } from '@/features/auth/actions/reset-password.action'
 
 export default function ResetPassword() {
   const { toast } = useToast()

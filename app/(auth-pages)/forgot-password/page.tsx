@@ -1,11 +1,11 @@
 'use client'
-import { forgotPasswordAction } from '@/app/actions'
 import { SubmitButton } from '@/common/components/submit-button'
 import { Input } from '@/common/components/ui/input'
 import { Label } from '@/common/components/ui/label'
 import Link from 'next/link'
 import { SmtpMessage } from '../smtp-message'
 import { useToast } from '@/common/hooks/use-toast'
+import { forgotPasswordAction } from '@/features/auth/actions/forgot-password.action'
 
 export default function ForgotPassword() {
   const { toast } = useToast()

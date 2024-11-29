@@ -1,4 +1,7 @@
+import { AuthRoutes } from '@/common/types/routes.types'
 import { createClient } from '@/common/utils/supabase/server'
+import { AuthService } from '@/features/auth/services/auth.service'
+import { UserService } from '@/features/users/service/user-service'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -7,31 +10,39 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin
 
   if (code) {
-    const supabase = await createClient()
+    const authService = new AuthService()
 
     // Intercambiar el código por una sesión
-    const { data: { session }, error: sessionError } = await supabase.auth.exchangeCodeForSession(code)
-    
+    const {
+      data: { session },
+      error: sessionError
+    } = await authService.exchangeCodeForSession(code)
+
     if (sessionError || !session?.user?.email) {
-      return NextResponse.redirect(`${origin}/sign-in?error=Error de autenticación`)
+      return NextResponse.redirect(
+        `${origin}${AuthRoutes.SIGN_IN}?error=Error de autenticación`
+      )
     }
 
+    const userService = new UserService()
+
     // Verificar si el usuario existe en nuestra tabla de usuarios
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', session.user.email)
-      .single()
+    const { data: userData, error: userError } =
+      await userService.getUserByEmail(session.user.email)
 
     if (userError || !userData) {
-      // Si el usuario no existe, cerrar sesión y redirigir
-      await supabase.auth.signOut()
-      return NextResponse.redirect(`${origin}/sign-in?error=Usuario no autorizado`)
+      await authService.signOut()
+
+      return NextResponse.redirect(
+        `${origin}${AuthRoutes.SIGN_IN}?error=Usuario no autorizado`
+      )
     }
 
     return NextResponse.redirect(origin)
   }
 
   // Si no hay código, redirigir a sign-in
-  return NextResponse.redirect(`${origin}/sign-in?error=Error de autenticación`)
+  return NextResponse.redirect(
+    `${origin}${AuthRoutes.SIGN_IN}?error=Error de autenticación`
+  )
 }
