@@ -1,14 +1,15 @@
-import { createServerClient, } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { createClient as createClientSupabase } from '@supabase/supabase-js'
 import { Database } from '@/common/types/database.types'
+import { EnvVariables } from '../env.utils'
 
 export const createClient = async () => {
   const cookieStore = await cookies()
 
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    EnvVariables.supaBaseUrl!,
+    EnvVariables.supaBaseAnonKey!,
     {
       cookies: {
         getAll() {
@@ -32,8 +33,8 @@ export const createClient = async () => {
 
 export const createClientAdmin = async () => {
   return createClientSupabase<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    EnvVariables.supaBaseUrl!,
+    EnvVariables.supaBaseServiceRoleKey!,
     {
       auth: {
         autoRefreshToken: false,

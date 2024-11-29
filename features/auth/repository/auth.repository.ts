@@ -1,6 +1,9 @@
 import { UserRole } from '@/common/types/user.types'
+import { EnvVariables } from '@/common/utils/env.utils'
 import { createClient, createClientAdmin } from '@/common/utils/supabase/server'
 import { UserRepository } from '@/features/users/repository/user.repository'
+import { createServerClient } from '@supabase/ssr'
+import { NextRequest, NextResponse } from 'next/server'
 
 export class AuthRepository {
   private static async getAdminClient() {
@@ -77,5 +80,34 @@ export class AuthRepository {
     const supabaseAdmin = await AuthRepository.getAdminClient()
 
     return await supabaseAdmin.auth.admin.deleteUser(userId)
+  }
+
+  static async refreshSession(request: NextRequest, response: NextResponse) {
+    const supabase = createServerClient(
+      EnvVariables.supaBaseUrl!,
+      EnvVariables.supaBaseAnonKey!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            )
+            response = NextResponse.next({
+              request
+            })
+            cookiesToSet.forEach(({ name, value, options }) =>
+              response.cookies.set(name, value, options)
+            )
+          }
+        }
+      }
+    )
+
+    // This will refresh session if expired - required for Server Components
+    // https://supabase.com/docs/guides/auth/server-side/nextjs
+    return await supabase.auth.getUser()
   }
 }

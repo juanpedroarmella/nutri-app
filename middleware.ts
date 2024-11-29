@@ -1,12 +1,55 @@
 import { type NextRequest } from "next/server";
-import { updateSession } from "@/common/utils/supabase/middleware";
-import { adminMiddleware } from './core/middleware/admin'
+import { ProtectedRoutes } from "@/common/types/routes.types";
+import { AuthRepository } from "@/features/auth/repository/auth.repository";
+import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    return await adminMiddleware(request);
+  // 1. Refresh session and get user
+  const response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
+  
+  const { data: { user }, error } = await AuthRepository.refreshSession(request, response);
+  const currentPath = request.nextUrl.pathname;
+
+  // 2. If user is authenticated and trying to access auth pages, redirect to appropriate route
+  if (user && (currentPath === '/sign-in' || currentPath === '/')) {
+    const isAdmin = await AuthRepository.checkAdmin();
+    return NextResponse.redirect(
+      new URL(isAdmin ? ProtectedRoutes.ADMIN : ProtectedRoutes.DASHBOARD, request.url)
+    );
   }
-  return await updateSession(request);
+
+  // 3. Check if user is trying to access protected routes
+  const isProtectedRoute = Object.values(ProtectedRoutes).some(route =>
+    currentPath.startsWith(route)
+  );
+
+  // 4. If no user and trying to access protected route, redirect to sign in
+  if (isProtectedRoute && (!user || error)) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
+  }
+
+  // 5. If user exists, handle role-based access
+  if (user) {
+    const isAdmin = await AuthRepository.checkAdmin();
+    const isAdminRoute = currentPath.startsWith(ProtectedRoutes.ADMIN);
+    const isDashboardRoute = currentPath.startsWith(ProtectedRoutes.DASHBOARD);
+
+    // Admin trying to access dashboard -> redirect to admin
+    if (isAdmin && isDashboardRoute) {
+      return NextResponse.redirect(new URL(ProtectedRoutes.ADMIN, request.url));
+    }
+
+    // Non-admin trying to access admin -> redirect to dashboard
+    if (!isAdmin && isAdminRoute) {
+      return NextResponse.redirect(new URL(ProtectedRoutes.DASHBOARD, request.url));
+    }
+  }
+
+  return response;
 }
 
 export const config = {
@@ -14,4 +57,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
-  
