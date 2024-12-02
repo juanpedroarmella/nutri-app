@@ -5,6 +5,19 @@ import { userService } from '@/features/users/service/user-service'
 import Link from 'next/link'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
+import { APP_NAME } from '../constants/app.constants'
+import { UserRole } from '../types/user.types'
+import { AdminRoutes, AuthRoutes, ProtectedRoutes } from '../types/routes.types'
+import { LogOut, User, UserCircle } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from './ui/dropdown-menu'
+import { Avatar, AvatarFallback } from '@radix-ui/react-avatar'
 
 export default async function AuthButton() {
   const user = await authService.getCurrentUser()
@@ -30,7 +43,7 @@ export default async function AuthButton() {
               disabled
               className='opacity-75 cursor-none pointer-events-none'
             >
-              <Link href='/sign-in'>Iniciar sesión</Link>
+              <Link href={AuthRoutes.SIGN_IN}>Iniciar sesión</Link>
             </Button>
           </div>
         </div>
@@ -39,29 +52,55 @@ export default async function AuthButton() {
   }
 
   if (user) {
-    const userData = await userService.getUser(user.id)
+    const userData = await userService.getCurrentUser()
 
     return (
-      <div className='flex items-center gap-4'>
-        Hey, {user.email}!
-        {userData?.role === 'admin' && (
-          <Button asChild variant='outline'>
-            <Link href='/admin'>Panel Admin</Link>
-          </Button>
-        )}
-        <form action={signOutAction}>
-          <Button type='submit' variant='outline'>
-            Cerrar sesión
-          </Button>
-        </form>
+      <div className='flex items-center gap-2'>
+        <p className='text-sm text-muted-foreground'>
+          ¡Hola {userData?.first_name}!
+        </p>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='default' className='relative h-8 w-8 rounded-full'>
+              <Avatar>
+                <AvatarFallback className=''>
+                  {userData?.first_name?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className='w-56' align='end' forceMount>
+            <DropdownMenuLabel className='font-normal'>
+              <p className='text-xs text-muted-foreground'>{user.email}</p>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link
+                href={ProtectedRoutes.PROFILE}
+                className='flex items-center hover:cursor-pointer'
+              >
+                <User className='mr-2 h-4 w-4' />
+                <span>Perfil</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <form action={signOutAction} className='w-full'>
+                <button className='flex w-full items-center'>
+                  <LogOut className='mr-2 h-4 w-4' />
+                  <span>Cerrar sesión</span>
+                </button>
+              </form>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     )
   }
 
   return (
     <div className='flex gap-2'>
-      <Button asChild size='sm' variant={'default'}>
-        <Link href='/sign-in'>Iniciar sesión</Link>
+      <Button asChild size='sm' variant='default'>
+        <Link href={AuthRoutes.SIGN_IN}>Iniciar sesión</Link>
       </Button>
     </div>
   )

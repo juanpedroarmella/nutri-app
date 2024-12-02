@@ -1,7 +1,7 @@
 export enum ProtectedRoutes {
   DASHBOARD = '/dashboard',
-  ADMIN = '/admin'
-
+  ADMIN = '/admin',
+  PROFILE = '/profile'
 }
 
 export enum AuthRoutes {
