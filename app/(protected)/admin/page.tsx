@@ -24,7 +24,7 @@ export default async function AdminPage() {
             <CreateUserDialog />
           </div>
         </CardHeader>
-        <Separator />
+        <Separator/>
         <CardContent className="pt-6">
           <ListUserComponent />
         </CardContent>

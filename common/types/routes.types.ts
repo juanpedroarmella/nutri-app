@@ -1,6 +1,7 @@
 export enum ProtectedRoutes {
   DASHBOARD = '/dashboard',
   ADMIN = '/admin'
+
 }
 
 export enum AuthRoutes {
@@ -11,5 +12,10 @@ export enum AuthRoutes {
 }
 
 export enum AdminRoutes {
-  HOME = '/admin'
+  HOME = '/admin',
+  USERS = '/admin/users'
+}
+
+export enum ApiRoutes {
+  WELCOME_EMAIL = '/api/auth/welcome'
 }

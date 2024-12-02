@@ -47,4 +47,14 @@ export class UserRepository {
 
     return await supabase.from('users').select('*').eq('email', email).single()
   }
+
+  async getUserDetails(userId: string) {
+    const supabase = await createClient()
+    
+    return await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single()
+  }
 }

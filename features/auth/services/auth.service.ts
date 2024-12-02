@@ -1,6 +1,7 @@
 import { UserRole } from '@/common/types/user.types'
 import { UserRepository } from '@/features/users/repository/user.repository'
 import { AuthRepository } from '../repository/auth.repository'
+import { sendWelcomeEmailAction } from '@/features/email/actions/welcome.action'
 
 export class AuthService {
   private static instance: AuthService | null = null
@@ -43,7 +44,13 @@ export class AuthService {
     role: string
   }) {
     const password = this.getDefaultPassword(data.email)
-    return await this.authRepository.createUser({ ...data, password })
+    const result = await this.authRepository.createUser({ ...data, password })
+    
+    if (!result.error) {
+      await sendWelcomeEmailAction(data.email, password)
+    }
+    
+    return result
   }
 
   async isCurrentUserAdmin() {

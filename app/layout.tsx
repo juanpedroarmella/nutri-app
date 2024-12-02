@@ -2,23 +2,21 @@ import DeployButton from '@/common/components/deploy-button'
 import { EnvVarWarning } from '@/common/components/env-var-warning'
 import HeaderAuth from '@/common/components/header-auth'
 import { ThemeSwitcher } from '@/common/components/theme-switcher'
+import { Toaster } from '@/common/components/ui/toaster'
+import { APP_DESCRIPTION, APP_NAME } from '@/common/constants/app.constants'
+import { EnvVariables } from '@/common/utils/env.utils'
 import { hasEnvVars } from '@/common/utils/supabase/check-env-vars'
 import { GeistSans } from 'geist/font/sans'
 import { ThemeProvider } from 'next-themes'
 import Link from 'next/link'
 import './globals.css'
-import { Toaster } from '@/common/components/ui/toaster'
-import { ToastProvider } from '@radix-ui/react-toast'
-import { EnvVariables } from '@/common/utils/env.utils'
 
-const defaultUrl = EnvVariables.vercelUrl
-  ? `https://${EnvVariables.vercelUrl}`
-  : 'http://localhost:3000'
+const defaultUrl = EnvVariables.nextPublicAppUrl
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'Nutri App',
-  description: 'La app de nutrición'
+  title: `${APP_NAME}`,
+  description: APP_DESCRIPTION
 }
 
 export default function RootLayout({
@@ -40,7 +38,7 @@ export default function RootLayout({
               <nav className='w-full flex justify-center border-b border-b-foreground/10 h-16'>
                 <div className='w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm'>
                   <div className='flex gap-5 items-center font-semibold'>
-                    <Link href={'/'}>Nutri App</Link>
+                    <Link href={'/'}>{APP_NAME}</Link>
                     <div className='flex items-center gap-2'>
                       <DeployButton />
                     </div>

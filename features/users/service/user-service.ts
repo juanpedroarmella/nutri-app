@@ -48,6 +48,10 @@ export class UserService {
   async getUserByEmail(email: string) {
     return await this.userRepository.getUserByEmail(email)
   }
+
+  async getUserDetails(userId: string) {
+    return await this.userRepository.getUserDetails(userId)
+  }
 }
 
 export const userService = UserService.getInstance()

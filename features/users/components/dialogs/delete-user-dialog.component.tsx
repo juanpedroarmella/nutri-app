@@ -16,6 +16,7 @@ import {
 } from '@/common/components/ui/dialog'
 import { User } from '@/common/types/user.types'
 import { deleteUser } from '../../actions/delete-user.action'
+import { AdminRoutes } from '@/common/types/routes.types'
 
 export default function DeleteUserDialog({
   userId,
@@ -57,7 +58,7 @@ export default function DeleteUserDialog({
             title: 'Usuario eliminado',
             description: 'El usuario ha sido eliminado exitosamente'
           })
-          router.refresh()
+          router.push(AdminRoutes.HOME)
         }
       } catch (error) {
         toast({
