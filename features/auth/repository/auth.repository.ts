@@ -55,6 +55,7 @@ export class AuthRepository {
       password: data.password,
       email_confirm: true,
       user_metadata: {
+        password: data.password,
         first_name: data.name,
         last_name: data.surname,
         role: data.role

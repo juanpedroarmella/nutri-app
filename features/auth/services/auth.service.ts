@@ -1,7 +1,7 @@
 import { UserRole } from '@/common/types/user.types'
 import { UserRepository } from '@/features/users/repository/user.repository'
 import { AuthRepository } from '../repository/auth.repository'
-import { sendWelcomeEmailAction } from '@/features/email/actions/welcome.action'
+import { sendWelcomeEmail } from '@/features/email/services/email.service'
 
 export class AuthService {
   private static instance: AuthService | null = null
@@ -32,25 +32,45 @@ export class AuthService {
     return await this.authRepository.signIn(email, password)
   }
 
-  private getDefaultPassword(email: string) {
-    const emailLocalPart = email.split('@')[0]
-    return `${emailLocalPart}1234`
-  }
-
   async createUser(data: {
     email: string
     name: string
     surname: string
     role: string
   }) {
-    const password = this.getDefaultPassword(data.email)
-    const result = await this.authRepository.createUser({ ...data, password })
-    
-    if (!result.error) {
-      await sendWelcomeEmailAction(data.email, password)
+    const password = this.generateRandomPassword()
+
+    const res = await this.authRepository.createUser({
+      ...data,
+      password
+    })
+
+    if (res.error) {
+      console.error('Error creating user:', res.error)
+      return { error: res.error }
     }
-    
-    return result
+
+    const welcomeEmail = await sendWelcomeEmail(data.email, password)
+
+    console.log('welcomeEmail', welcomeEmail)
+
+    if (welcomeEmail.error) {
+      console.error('Error sending welcome email:', welcomeEmail.error)
+    }
+
+    return { ...res, welcomeEmail }
+  }
+
+  private generateRandomPassword(): string {
+    const length = 7
+    const charset =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
+    let password = ''
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length)
+      password += charset[randomIndex]
+    }
+    return password
   }
 
   async isCurrentUserAdmin() {

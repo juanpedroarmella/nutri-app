@@ -6,6 +6,14 @@ import Link from 'next/link'
 import { SmtpMessage } from '../smtp-message'
 import { useToast } from '@/common/hooks/use-toast'
 import { forgotPasswordAction } from '@/features/auth/actions/forgot-password.action'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent
+} from '@/common/components/ui/card'
+import { AuthRoutes } from '@/common/types/routes.types'
 
 export default function ForgotPassword() {
   const { toast } = useToast()
@@ -33,27 +41,36 @@ export default function ForgotPassword() {
   }
 
   return (
-    <>
-      <form
-        onSubmit={handleForgotPassword}
-        className='flex-1 flex flex-col w-full gap-2 text-foreground [&>input]:mb-6 min-w-64 max-w-64 mx-auto'
-      >
-        <div>
-          <h1 className='text-2xl font-medium'>Restablecer contraseña</h1>
-          <p className='text-sm text-secondary-foreground'>
+    <div className='flex flex-col items-center justify-center gap-4'>
+      <Card className='w-full max-w-md'>
+        <CardHeader>
+          <CardTitle>Restablecer contraseña</CardTitle>
+          <CardDescription>
             Ya tienes una cuenta?{' '}
-            <Link className='text-primary underline' href='/sign-in'>
+            <Link className='text-primary hover:underline' href={AuthRoutes.SIGN_IN}>
               Iniciar sesión
             </Link>
-          </p>
-        </div>
-        <div className='flex flex-col gap-2 [&>input]:mb-3 mt-8'>
-          <Label htmlFor='email'>Email</Label>
-          <Input name='email' placeholder='tu@email.com' required />
-          <SubmitButton>Restablecer contraseña</SubmitButton>
-        </div>
-      </form>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleForgotPassword} className='space-y-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='email'>Email</Label>
+              <Input
+                id='email'
+                name='email'
+                type='email'
+                placeholder='tu@email.com'
+                required
+              />
+            </div>
+            <SubmitButton className='w-full'>
+              Restablecer contraseña
+            </SubmitButton>
+          </form>
+        </CardContent>
+      </Card>
       <SmtpMessage />
-    </>
+    </div>
   )
 }

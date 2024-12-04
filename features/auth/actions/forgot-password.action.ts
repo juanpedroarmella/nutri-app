@@ -3,8 +3,8 @@ import { createClient } from '@/common/utils/supabase/server'
 import { encodedRedirect } from '@/common/utils/utils'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-
 import { AuthRoutes } from '@/common/types/routes.types'
+
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get('email')?.toString()
   const supabase = await createClient()
@@ -19,15 +19,17 @@ export const forgotPasswordAction = async (formData: FormData) => {
     )
   }
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  const res = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}${AuthRoutes.CALLBACK}?redirect_to=${AuthRoutes.RESET_PASSWORD}`
   })
 
-  if (error) {
-    console.error(error.message)
+  console.log(res)
+
+  if (res.error) {
+    console.error(res.error.message)
     return {
       type: 'error',
-      message: error.message
+      message: res.error.message
     }
   }
 
