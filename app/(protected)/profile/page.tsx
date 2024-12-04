@@ -5,7 +5,7 @@ import {
   CardTitle
 } from '@/common/components/ui/card'
 import EditProfileForm from '@/features/profile/components/edit-profile-form'
-import { userService } from '@/features/users/service/user-service'
+import { userService } from '@/features/users/service/user.service'
 import { notFound } from 'next/navigation'
 
 export default async function ProfilePage() {

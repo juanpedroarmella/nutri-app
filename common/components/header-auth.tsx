@@ -1,14 +1,13 @@
 import { hasEnvVars } from '@/common/utils/supabase/check-env-vars'
 import { signOutAction } from '@/features/auth/actions/sing-out.action'
 import { authService } from '@/features/auth/services/auth.service'
-import { userService } from '@/features/users/service/user-service'
+import { userService } from '@/features/users/service/user.service'
+import { Avatar, AvatarFallback } from '@radix-ui/react-avatar'
+import { LogOut, User } from 'lucide-react'
 import Link from 'next/link'
+import { AuthRoutes, ProtectedRoutes } from '../types/routes.types'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
-import { APP_NAME } from '../constants/app.constants'
-import { UserRole } from '../types/user.types'
-import { AdminRoutes, AuthRoutes, ProtectedRoutes } from '../types/routes.types'
-import { LogOut, User, UserCircle } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from './ui/dropdown-menu'
-import { Avatar, AvatarFallback } from '@radix-ui/react-avatar'
 
 export default async function AuthButton() {
   const user = await authService.getCurrentUser()

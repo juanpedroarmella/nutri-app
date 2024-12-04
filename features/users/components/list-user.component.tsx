@@ -7,11 +7,10 @@ import {
   TableRow
 } from '@/common/components/ui/table'
 
-import { userService } from '../service/user-service'
+import { userService } from '../service/user.service'
 import UserRow from './user-row.component'
 
 export default async function ListUserComponent() {
-
   const { data: users } = await userService.getUsers()
   const currentUser = await userService.getCurrentUser()
 
@@ -27,16 +26,13 @@ export default async function ListUserComponent() {
               <TableHead>Nombre</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Rol</TableHead>
+              <TableHead>Teléfono</TableHead>
               <TableHead className='text-right'>Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users?.map(user => (
-              <UserRow 
-                key={user.id} 
-                user={user} 
-                currentUser={currentUser} 
-              />
+              <UserRow key={user.id} user={user} currentUser={currentUser} />
             ))}
           </TableBody>
         </Table>

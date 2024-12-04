@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/ui/card'
-import { userService } from '@/features/users/service/user-service'
+import { userService } from '@/features/users/service/user.service'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/common/components/ui/badge'
 import { Button } from '@/common/components/ui/button'
@@ -17,10 +17,10 @@ export default async function UserDetailsPage({
   params
 }: PageProps) {
   const resolvedParams = await params
-  const { data: user, error } = await userService.getUserDetails(resolvedParams.id)
+  const user = await userService.getUser(resolvedParams.id)
   const currentUser = await userService.getCurrentUser()
 
-  if (error || !user) {
+  if (!user) {
     notFound()
   }
 
@@ -57,6 +57,10 @@ export default async function UserDetailsPage({
           <div>
             <label className='text-sm text-muted-foreground'>Email</label>
             <p className='font-medium'>{user.email}</p>
+          </div>
+          <div>
+            <label className='text-sm text-muted-foreground'>Teléfono</label>
+            <p className='font-medium'>{user.phone || '-'}</p>
           </div>
           <div>
             <label className='text-sm text-muted-foreground'>Rol</label>

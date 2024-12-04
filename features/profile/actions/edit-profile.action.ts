@@ -1,7 +1,7 @@
 'use server'
 
 import { authService } from '@/features/auth/services/auth.service'
-import { userService } from '@/features/users/service/user-service'
+import { userService } from '@/features/users/service/user.service'
 import { revalidatePath } from 'next/cache'
 
 interface EditProfileData {

@@ -33,7 +33,8 @@ export default function CreateUserForm({ onSuccess }: CreateUserFormProps) {
           email: formData.get('email') as string,
           name: formData.get('name') as string,
           surname: formData.get('surname') as string,
-          role: roleRef.current
+          role: roleRef.current,
+          phone: formData.get('phone') as unknown as number | null
         }
         const result = await createUser({
           data: data as any
@@ -90,13 +91,12 @@ export default function CreateUserForm({ onSuccess }: CreateUserFormProps) {
 
       <div className='space-y-2'>
         <Label htmlFor='email'>Email</Label>
-        <Input
-          id='email'
-          type='email'
-          name='email'
-          placeholder='Email'
-          required
-        />
+        <Input id='email' type='email' name='email' placeholder='Email' />
+      </div>
+
+      <div className='space-y-2'>
+        <Label htmlFor='phone'>Teléfono</Label>
+        <Input id='phone' type='number' name='phone' placeholder='Teléfono' />
       </div>
 
       <div className='space-y-2'>

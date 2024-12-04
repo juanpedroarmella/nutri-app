@@ -11,6 +11,7 @@ export async function createUser({
     name: string
     surname: string
     role: string
+    phone: number | null
   }
 }) {
   const isAdmin = await authService.isCurrentUserAdmin()

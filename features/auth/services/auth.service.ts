@@ -1,7 +1,7 @@
 import { UserRole } from '@/common/types/user.types'
+import { sendWelcomeEmail } from '@/features/email/services/email.service'
 import { UserRepository } from '@/features/users/repository/user.repository'
 import { AuthRepository } from '../repository/auth.repository'
-import { sendWelcomeEmail } from '@/features/email/services/email.service'
 
 export class AuthService {
   private static instance: AuthService | null = null
@@ -24,6 +24,26 @@ export class AuthService {
     return await this.authRepository.getCurrentUser()
   }
 
+  async getUsers() {
+    const res = await this.authRepository.getUsers()
+
+    if (res.error) {
+      return { error: res.error, data: [] }
+    }
+
+    //DTO
+    const users = res.data.users.map(user => ({
+      id: user.id,
+      email: user.email
+    }))
+
+    return { data: users, error: null }
+  }
+
+  async getUser(userId: string) {
+    return await this.authRepository.getUser(userId)
+  }
+
   async signOut() {
     return await this.authRepository.signOut()
   }
@@ -37,6 +57,7 @@ export class AuthService {
     name: string
     surname: string
     role: string
+    phone: number | null
   }) {
     const password = this.generateRandomPassword()
 
@@ -79,7 +100,8 @@ export class AuthService {
     if (!currentUser?.id) {
       return false
     }
-    const user = await this.userRepository.getUser(currentUser?.id)
+
+    const user = await this.userRepository.getUserByAuthId(currentUser?.id)
 
     return user?.role === UserRole.ADMIN
   }

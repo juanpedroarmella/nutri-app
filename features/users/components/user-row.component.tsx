@@ -18,15 +18,17 @@ export default function UserRow({ user, currentUser }: UserRowProps) {
 
   const handleRowClick = (e: React.MouseEvent) => {
     // Prevent navigation when clicking on action buttons or dialogs
-    if ((e.target as HTMLElement).closest('.actions') || 
-        (e.target as HTMLElement).closest('[role="dialog"]')) {
+    if (
+      (e.target as HTMLElement).closest('.actions') ||
+      (e.target as HTMLElement).closest('[role="dialog"]')
+    ) {
       return
     }
     router.push(`${AdminRoutes.USERS}/${user.id}`)
   }
 
   return (
-    <TableRow className="hover:cursor-pointer" onClick={handleRowClick}>
+    <TableRow className='hover:cursor-pointer' onClick={handleRowClick}>
       <TableCell className='font-medium'>
         <div className='flex items-center gap-2'>
           {user.first_name} {user.last_name}
@@ -43,6 +45,7 @@ export default function UserRow({ user, currentUser }: UserRowProps) {
           {user.role === 'admin' ? 'Admin' : 'Usuario'}
         </Badge>
       </TableCell>
+      <TableCell className='text-center'>{user.phone || '-'}</TableCell>
       <TableCell className='text-right'>
         <div className='flex justify-center gap-2 actions'>
           <EditUserDialog user={user} />
@@ -55,4 +58,4 @@ export default function UserRow({ user, currentUser }: UserRowProps) {
       </TableCell>
     </TableRow>
   )
-} 
+}

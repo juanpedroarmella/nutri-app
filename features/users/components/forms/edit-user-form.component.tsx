@@ -32,11 +32,16 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
 
     startTransition(async () => {
       try {
+        let phone = formData.get('phone')
+        if (phone === '') {
+          phone = null
+        }
+
         const data = {
-          email: user.email,
           first_name: formData.get('name') as string,
           last_name: formData.get('surname') as string,
-          role: roleRef.current
+          role: roleRef.current,
+          phone
         } as Partial<User>
 
         const result = await editUser(user.id, data)
@@ -100,6 +105,17 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
           value={user.email}
           disabled
           required
+        />
+      </div>
+
+      <div className='space-y-2'>
+        <Label htmlFor='phone'>Teléfono</Label>
+        <Input
+          id='phone'
+          type='tel'
+          name='phone'
+          placeholder='Teléfono'
+          defaultValue={user.phone || ''}
         />
       </div>
 

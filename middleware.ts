@@ -18,7 +18,6 @@ export async function middleware(request: NextRequest) {
   } = await refreshSession(request, response)
   const currentPath = request.nextUrl.pathname
 
-
   // 2. If user is authenticated and trying to access auth pages, redirect to appropriate route
   if (user && (currentPath === AuthRoutes.SIGN_IN || currentPath === '/')) {
     const isAdmin = await authService.isCurrentUserAdmin()

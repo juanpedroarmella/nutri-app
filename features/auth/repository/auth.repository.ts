@@ -14,9 +14,15 @@ export class AuthRepository {
   }
 
   async getUser(userId: string) {
-    const supabase = await createClient()
+    const supabaseAdmin = await AuthRepository.getAdminClient()
 
-    return await supabase.auth.admin.getUserById(userId)
+    return await supabaseAdmin.auth.admin.getUserById(userId)
+  }
+
+  async getUsers() {
+    const supabaseAdmin = await AuthRepository.getAdminClient()
+
+    return await supabaseAdmin.auth.admin.listUsers()
   }
 
   async getSession() {
@@ -46,8 +52,11 @@ export class AuthRepository {
     surname: string
     role: string
     password: string
+    phone: number | null
   }) {
     const supabaseAdmin = await AuthRepository.getAdminClient()
+
+    console.log('data', data)
 
     // When creating a user-auth, a trigger fires that creates a user in the users table
     return await supabaseAdmin.auth.admin.createUser({
@@ -58,7 +67,8 @@ export class AuthRepository {
         password: data.password,
         first_name: data.name,
         last_name: data.surname,
-        role: data.role
+        role: data.role,
+        phone: data.phone
       }
     })
   }

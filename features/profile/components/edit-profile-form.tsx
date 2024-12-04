@@ -33,9 +33,15 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
 
     startTransition(async () => {
       try {
+        let phone = formData.get('phone')
+        if (phone === '') {
+          phone = null
+        }
+
         const data = {
           first_name: formData.get('name') as string,
-          last_name: formData.get('surname') as string
+          last_name: formData.get('surname') as string,
+          phone
         }
 
         const result = await editProfile(user.id, data)
@@ -136,6 +142,16 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
             <div className='space-y-2'>
               <Label htmlFor='email'>Email</Label>
               <Input id='email' type='email' value={user.email} disabled />
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='phone'>Teléfono</Label>
+              <Input
+                id='phone'
+                name='phone'
+                type='tel'
+                defaultValue={user.phone || '-'}
+              />
             </div>
 
             <Button type='submit' disabled={isPending} className='w-full'>

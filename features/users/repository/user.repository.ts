@@ -12,18 +12,6 @@ export class UserRepository {
     return await supabase.from('users').select('*').returns<User[]>()
   }
 
-  async getUser(userId: string) {
-    const supabase = await createClient()
-
-    const { data: userPublicData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id_auth', userId)
-      .single()
-
-    return userPublicData
-  }
-
   async editUser(userId: string, data: Partial<User>) {
     const supabase = await createClient()
 
@@ -42,19 +30,9 @@ export class UserRepository {
     return res.data as User
   }
 
-  async getUserByEmail(email: string) {
-    const supabase = await this.getAdminClient()
-
-    return await supabase.from('users').select('*').eq('email', email).single()
-  }
-
-  async getUserDetails(userId: string) {
+  async getUser(userId: string) {
     const supabase = await createClient()
-    
-    return await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single()
+
+    return await supabase.from('users').select('*').eq('id', userId).single()
   }
 }

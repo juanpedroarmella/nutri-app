@@ -3,7 +3,7 @@
 import { User } from '@/common/types/user.types'
 import { authService } from '@/features/auth/services/auth.service'
 import { revalidatePath } from 'next/cache'
-import { userService } from '../service/user-service'
+import { userService } from '../service/user.service'
 import { AdminRoutes } from '@/common/types/routes.types'
 
 export async function editUser(userId: string, data: Partial<User>) {
