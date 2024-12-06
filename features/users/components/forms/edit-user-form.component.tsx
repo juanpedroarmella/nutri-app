@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useTransition } from 'react'
-import { User, UserRole } from '@/common/types/user.types'
 import { Button } from '@/common/components/ui/button'
 import { Input } from '@/common/components/ui/input'
 import {
@@ -14,6 +13,7 @@ import {
 import { useToast } from '@/common/hooks/use-toast'
 import { Label } from '@/common/components/ui/label'
 import { editUser } from '../../actions/edit-user.action'
+import { User, UserRole } from '../../types/user.types'
 
 interface EditUserFormProps {
   user: User
@@ -78,7 +78,7 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
           type='text'
           name='name'
           placeholder='Nombre'
-          defaultValue={user.first_name}
+          defaultValue={user.firstName}
           required
         />
       </div>
@@ -90,7 +90,7 @@ export default function EditUserForm({ user, onSuccess }: EditUserFormProps) {
           type='text'
           name='surname'
           placeholder='Apellido'
-          defaultValue={user.last_name}
+          defaultValue={user.lastName}
           required
         />
       </div>

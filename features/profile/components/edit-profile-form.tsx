@@ -1,22 +1,21 @@
 'use client'
 
-import { useToast } from '@/common/hooks/use-toast'
-import { useRef, useTransition, FormEvent } from 'react'
-import { Label } from '@/common/components/ui/label'
-import { Input } from '@/common/components/ui/input'
+import { Spinner } from '@/common/components/spinner.component'
 import { Button } from '@/common/components/ui/button'
-import { Separator } from '@/common/components/ui/separator'
-import { User } from '@/common/types/user.types'
-import { editProfile } from '../actions/edit-profile.action'
 import {
   Card,
-  CardHeader,
-  CardTitle,
+  CardContent,
   CardDescription,
-  CardContent
+  CardHeader,
+  CardTitle
 } from '@/common/components/ui/card'
-import { Spinner } from '@/common/components/spinner.component'
-import { UserIcon, Lock } from 'lucide-react'
+import { Input } from '@/common/components/ui/input'
+import { Label } from '@/common/components/ui/label'
+import { useToast } from '@/common/hooks/use-toast'
+import { Lock, UserIcon } from 'lucide-react'
+import { FormEvent, useRef, useTransition } from 'react'
+import { editProfile } from '../actions/edit-profile.action'
+import { User } from '@/features/users/types/user.types'
 
 interface EditProfileFormProps {
   user: User
@@ -124,7 +123,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
               <Input
                 id='name'
                 name='name'
-                defaultValue={user.first_name}
+                defaultValue={user.firstName}
                 required
               />
             </div>
@@ -134,7 +133,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
               <Input
                 id='surname'
                 name='surname'
-                defaultValue={user.last_name}
+                defaultValue={user.lastName}
                 required
               />
             </div>

@@ -3,10 +3,10 @@
 import { Badge } from '@/common/components/ui/badge'
 import { TableCell, TableRow } from '@/common/components/ui/table'
 import { AdminRoutes } from '@/common/types/routes.types'
-import { User } from '@/common/types/user.types'
 import { useRouter } from 'next/navigation'
 import DeleteUserDialog from './dialogs/delete-user-dialog.component'
 import EditUserDialog from './dialogs/edit-user-dialog.component'
+import { User } from '../types/user.types'
 
 interface UserRowProps {
   user: User
@@ -27,12 +27,14 @@ export default function UserRow({ user, currentUser }: UserRowProps) {
     router.push(`${AdminRoutes.USERS}/${user.id}`)
   }
 
+  console.log(currentUser)
+
   return (
     <TableRow className='hover:cursor-pointer' onClick={handleRowClick}>
       <TableCell className='font-medium'>
         <div className='flex items-center gap-2'>
-          {user.first_name} {user.last_name}
-          {currentUser?.id === user.id && (
+          {user.firstName} {user.lastName}
+          {currentUser?.idAuth === user.idAuth && (
             <Badge variant='outline' className='ml-2'>
               Tú
             </Badge>
@@ -50,9 +52,9 @@ export default function UserRow({ user, currentUser }: UserRowProps) {
         <div className='flex justify-center gap-2 actions'>
           <EditUserDialog user={user} />
           <DeleteUserDialog
-            userId={user.id_auth}
+            userId={user.idAuth}
             currentUser={currentUser}
-            disabled={currentUser?.id_auth === user.id_auth}
+            disabled={currentUser?.idAuth === user.idAuth}
           />
         </div>
       </TableCell>

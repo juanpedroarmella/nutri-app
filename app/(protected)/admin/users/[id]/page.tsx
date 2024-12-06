@@ -38,9 +38,9 @@ export default async function UserDetailsPage({
         <div className='flex gap-2'>
           <EditUserDialog user={user} />
           <DeleteUserDialog
-            userId={user.id_auth}
+            userId={user.idAuth}
             currentUser={currentUser}
-            disabled={currentUser?.id_auth === user.id_auth}
+            disabled={currentUser?.idAuth === user.idAuth}
           />
         </div>
       </div>
@@ -52,7 +52,7 @@ export default async function UserDetailsPage({
         <CardContent className='space-y-4'>
           <div>
             <label className='text-sm text-muted-foreground'>Nombre completo</label>
-            <p className='font-medium'>{user.first_name} {user.last_name}</p>
+            <p className='font-medium'>{user.firstName} {user.lastName}</p>
           </div>
           <div>
             <label className='text-sm text-muted-foreground'>Email</label>
@@ -76,7 +76,7 @@ export default async function UserDetailsPage({
           </div>
           <div>
             <label className='text-sm text-muted-foreground'>ID de Autenticación</label>
-            <p className='font-medium font-mono text-sm'>{user.id_auth}</p>
+            <p className='font-medium font-mono text-sm'>{user.idAuth}</p>
           </div>
         </CardContent>
       </Card>

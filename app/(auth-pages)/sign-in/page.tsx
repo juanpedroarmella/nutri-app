@@ -9,7 +9,7 @@ import { signInAction } from '@/features/auth/actions/sing-in.action'
 import GoogleAuthButton from '@/features/auth/components/google-auth-button.component'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { Suspense, useEffect } from 'react' // Añadimos esta importación
+import { Suspense, useEffect } from 'react'
 
 function LoginContent() {
   const { toast } = useToast()

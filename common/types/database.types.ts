@@ -1,4 +1,4 @@
-import { User } from './user.types'
+import { UserEntity } from '@/features/users/entity/user.entity'
 
 export type Json =
   | string
@@ -12,9 +12,9 @@ export interface Database {
   public: {
     Tables: {
       users: {
-        Row: User
-        Insert: Omit<User, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<User, 'id' | 'created_at' | 'updated_at'>>
+        Row: UserEntity
+        Insert: Omit<UserEntity, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<UserEntity, 'id' | 'created_at' | 'updated_at'>>
       }
     }
   }

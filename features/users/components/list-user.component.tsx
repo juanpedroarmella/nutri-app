@@ -11,7 +11,8 @@ import { userService } from '../service/user.service'
 import UserRow from './user-row.component'
 
 export default async function ListUserComponent() {
-  const { data: users } = await userService.getUsers()
+  const users = await userService.getUsers()
+
   const currentUser = await userService.getCurrentUser()
 
   return (

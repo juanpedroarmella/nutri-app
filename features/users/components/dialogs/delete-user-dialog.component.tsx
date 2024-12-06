@@ -14,9 +14,9 @@ import {
   DialogFooter,
   DialogDescription
 } from '@/common/components/ui/dialog'
-import { User } from '@/common/types/user.types'
 import { deleteUser } from '../../actions/delete-user.action'
 import { AdminRoutes } from '@/common/types/routes.types'
+import { User } from '../../types/user.types'
 
 export default function DeleteUserDialog({
   userId,

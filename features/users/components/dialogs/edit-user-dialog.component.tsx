@@ -10,8 +10,8 @@ import {
   DialogTrigger,
 } from '@/common/components/ui/dialog'
 import { PencilIcon } from 'lucide-react'
-import { User } from '@/common/types/user.types'
 import EditUserForm from '../forms/edit-user-form.component'
+import { User } from '../../types/user.types'
 
 interface EditUserDialogProps {
   user: User

@@ -55,14 +55,14 @@ export default async function AuthButton() {
     return (
       <div className='flex items-center gap-2'>
         <p className='text-sm text-muted-foreground'>
-          ¡Hola {userData?.first_name}!
+          ¡Hola {userData?.firstName}!
         </p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='default' className='relative h-8 w-8 rounded-full'>
               <Avatar>
                 <AvatarFallback className=''>
-                  {userData?.first_name?.charAt(0).toUpperCase()}
+                  {userData?.firstName?.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </Button>

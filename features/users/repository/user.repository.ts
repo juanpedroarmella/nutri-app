@@ -1,18 +1,14 @@
-import { User } from '@/common/types/user.types'
 import { createClient } from '@/common/utils/supabase/server'
+import { UserEntity } from '../entity/user.entity'
 
 export class UserRepository {
-  private async getAdminClient() {
-    return await createClient()
-  }
-
   async getUsers() {
     const supabase = await createClient()
 
-    return await supabase.from('users').select('*').returns<User[]>()
+    return await supabase.from('users').select('*').returns<UserEntity[]>()
   }
 
-  async editUser(userId: string, data: Partial<User>) {
+  async editUser(userId: string, data: Partial<UserEntity>) {
     const supabase = await createClient()
 
     return await supabase.from('users').update(data).eq('id', userId)
@@ -27,12 +23,18 @@ export class UserRepository {
       .eq('id_auth', userId)
       .single()
 
-    return res.data as User
+    return res.data as UserEntity
   }
 
   async getUser(userId: string) {
     const supabase = await createClient()
 
-    return await supabase.from('users').select('*').eq('id', userId).single()
+    const res = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single()
+
+    return res.data as UserEntity
   }
 }

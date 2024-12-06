@@ -1,7 +1,8 @@
 import { AuthService, authService } from '@/features/auth/services/auth.service'
 import { UserRepository } from '../repository/user.repository'
-import { User } from '@/common/types/user.types'
-import { AuthUser } from '@/features/auth/types/auth.types'
+import { UserDto } from '../dto/user.dto'
+import { UserEntity } from '../entity/user.entity'
+import { User } from '../types/user.types'
 
 export class UserService {
   private static instance: UserService | null = null
@@ -25,21 +26,16 @@ export class UserService {
     const users = await this.userRepository.getUsers()
 
     if (users.error || usersAuth.error) {
-      return { error: 'No se pudieron obtener los usuarios' }
+      throw new Error('No se pudieron obtener los usuarios')
     }
 
     if (!users.data || !usersAuth.data) {
-      return { data: [] }
+      return [] as User[]
     }
 
-    const res = users.data.map(user => {
-      const userAuth = usersAuth.data?.find(
-        userAuth => userAuth.id === user.id_auth
-      )
-      return { ...user, email: userAuth?.email }
-    })
+    const usersDto = UserDto.getUsers(users.data, usersAuth.data)
 
-    return { data: res as (User & AuthUser)[] }
+    return usersDto
   }
 
   async getCurrentUser() {
@@ -51,19 +47,26 @@ export class UserService {
 
     const user = await this.userRepository.getUserByAuthId(userAuth.id)
 
-    return { ...user, email: userAuth.email } as User & AuthUser
+    const userDto = new UserDto(user, userAuth).getUser()
+
+    return userDto
   }
 
   async getUser(userId: string) {
     const user = await this.userRepository.getUser(userId)
-    const userAuth = await this.authService.getUser(user.data.id_auth)
-    return {
-      ...user.data,
-      email: userAuth.data?.user?.email
-    } as User & AuthUser
+
+    const userAuth = await this.authService.getUser(user.id_auth)
+
+    if (!userAuth) {
+      return null
+    }
+
+    const userDto = new UserDto(user, userAuth).getUser()
+
+    return userDto
   }
 
-  async editUser(userId: string, data: Partial<User>) {
+  async editUser(userId: string, data: Partial<UserEntity>) {
     return await this.userRepository.editUser(userId, data)
   }
 

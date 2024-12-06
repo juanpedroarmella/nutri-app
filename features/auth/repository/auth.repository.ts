@@ -1,4 +1,5 @@
 import { createClient, createClientAdmin } from '@/common/utils/supabase/server'
+import { CreateUserRequest } from '../types/auth.types'
 
 export class AuthRepository {
   private static async getAdminClient() {
@@ -46,17 +47,8 @@ export class AuthRepository {
     })
   }
 
-  async createUser(data: {
-    email: string
-    name: string
-    surname: string
-    role: string
-    password: string
-    phone: number | null
-  }) {
+  async createUser(data: CreateUserRequest & { password: string }) {
     const supabaseAdmin = await AuthRepository.getAdminClient()
-
-    console.log('data', data)
 
     // When creating a user-auth, a trigger fires that creates a user in the users table
     return await supabaseAdmin.auth.admin.createUser({

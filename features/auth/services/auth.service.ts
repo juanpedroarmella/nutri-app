@@ -1,7 +1,9 @@
-import { UserRole } from '@/common/types/user.types'
 import { sendWelcomeEmail } from '@/features/email/services/email.service'
 import { UserRepository } from '@/features/users/repository/user.repository'
 import { AuthRepository } from '../repository/auth.repository'
+import { AuthDTO } from '../dto/auth.dto'
+import { CreateUserRequest } from '../types/auth.types'
+import { UserRole } from '@/features/users/types/user.types'
 
 export class AuthService {
   private static instance: AuthService | null = null
@@ -21,7 +23,14 @@ export class AuthService {
   }
 
   async getCurrentUser() {
-    return await this.authRepository.getCurrentUser()
+    const res = await this.authRepository.getCurrentUser()
+    if (!res) {
+      return null
+    }
+
+    const userDto = new AuthDTO(res).getUser()
+
+    return userDto
   }
 
   async getUsers() {
@@ -31,17 +40,21 @@ export class AuthService {
       return { error: res.error, data: [] }
     }
 
-    //DTO
-    const users = res.data.users.map(user => ({
-      id: user.id,
-      email: user.email
-    }))
+    const users = AuthDTO.getUsers(res.data.users)
 
     return { data: users, error: null }
   }
 
   async getUser(userId: string) {
-    return await this.authRepository.getUser(userId)
+    const user = await this.authRepository.getUser(userId)
+
+    if (!user.data.user) {
+      return null
+    }
+
+    const userDto = new AuthDTO(user.data.user).getUser()
+
+    return userDto
   }
 
   async signOut() {
@@ -52,13 +65,7 @@ export class AuthService {
     return await this.authRepository.signIn(email, password)
   }
 
-  async createUser(data: {
-    email: string
-    name: string
-    surname: string
-    role: string
-    phone: number | null
-  }) {
+  async createUser(data: CreateUserRequest) {
     const password = this.generateRandomPassword()
 
     const res = await this.authRepository.createUser({
@@ -72,8 +79,6 @@ export class AuthService {
     }
 
     const welcomeEmail = await sendWelcomeEmail(data.email, password)
-
-    console.log('welcomeEmail', welcomeEmail)
 
     if (welcomeEmail.error) {
       console.error('Error sending welcome email:', welcomeEmail.error)
