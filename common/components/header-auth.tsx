@@ -53,7 +53,7 @@ export default async function AuthButton() {
     const userData = await userService.getCurrentUser()
 
     return (
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-3'>
         <p className='text-sm text-muted-foreground'>
           ¡Hola {userData?.firstName}!
         </p>

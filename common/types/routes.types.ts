@@ -13,7 +13,8 @@ export enum AuthRoutes {
 
 export enum AdminRoutes {
   HOME = '/admin',
-  USERS = '/admin/users'
+  USERS = '/admin/users',
+  DOCUMENTS = '/admin/documents'
 }
 
 export enum ApiRoutes {
