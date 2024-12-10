@@ -47,6 +47,10 @@ export class UserService {
 
     const user = await this.userRepository.getUserByAuthId(userAuth.id)
 
+    if (!user) {
+      return null
+    }
+
     const userDto = new UserDto(user, userAuth).getUser()
 
     return userDto

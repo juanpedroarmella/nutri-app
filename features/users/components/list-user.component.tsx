@@ -13,6 +13,8 @@ import UserRow from './user-row.component'
 export default async function ListUserComponent() {
   const users = await userService.getUsers()
 
+  console.log(users)
+
   const currentUser = await userService.getCurrentUser()
 
   return (

@@ -6,7 +6,7 @@ import { AdminRoutes } from '@/common/types/routes.types'
 import { useRouter } from 'next/navigation'
 import DeleteUserDialog from './dialogs/delete-user-dialog.component'
 import EditUserDialog from './dialogs/edit-user-dialog.component'
-import { User } from '../types/user.types'
+import { User, UserRole } from '../types/user.types'
 
 interface UserRowProps {
   user: User
@@ -27,7 +27,7 @@ export default function UserRow({ user, currentUser }: UserRowProps) {
     router.push(`${AdminRoutes.USERS}/${user.id}`)
   }
 
-  console.log(currentUser)
+  console.log(user)
 
   return (
     <TableRow className='hover:cursor-pointer' onClick={handleRowClick}>
@@ -43,8 +43,8 @@ export default function UserRow({ user, currentUser }: UserRowProps) {
       </TableCell>
       <TableCell>{user.email}</TableCell>
       <TableCell>
-        <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-          {user.role === 'admin' ? 'Admin' : 'Usuario'}
+        <Badge variant={user.role === UserRole.ADMIN ? 'default' : 'secondary'}>
+          {user.role === UserRole.ADMIN ? 'Admin' : 'Usuario'}
         </Badge>
       </TableCell>
       <TableCell className='text-center'>{user.phone || '-'}</TableCell>
