@@ -44,40 +44,50 @@ function LoginContent() {
   }
 
   return (
-    <Card className='w-full max-w-[500px] min-w-[256px] mx-auto'>
-      <CardHeader>
-        <h1 className='text-2xl font-medium'>Iniciar sesión</h1>
-      </CardHeader>
-      <CardContent>
-        <form className='flex flex-col gap-4' onSubmit={handleSignIn}>
-          <div className='space-y-2'>
-            <Label htmlFor='email'>Correo electrónico</Label>
-            <Input name='email' placeholder='tu@email.com' required />
-          </div>
-          <div className='space-y-2'>
-            <div className='flex justify-between items-center'>
-              <Label htmlFor='password'>Contraseña</Label>
-              <Link
-                className='text-xs text-muted-foreground hover:text-primary'
-                href='/forgot-password'
-              >
-                ¿Olvidaste tu contraseña?
-              </Link>
+    <div className='flex flex-col gap-4'>
+      <Card className='w-full max-w-[500px] min-w-[256px] mx-auto'>
+        <CardHeader>
+          <h1 className='text-2xl font-medium'>Iniciar sesión</h1>
+        </CardHeader>
+        <CardContent>
+          <form className='flex flex-col gap-4' onSubmit={handleSignIn}>
+            <div className='space-y-2'>
+              <Label htmlFor='email'>Correo electrónico</Label>
+              <Input name='email' placeholder='tu@email.com' required />
             </div>
-            <Input
-              type='password'
-              name='password'
-              placeholder='Tu contraseña'
-              required
-            />
-          </div>
-          <SubmitButton pendingText='Iniciando sesión...' className='w-full'>
-            Iniciar sesión
-          </SubmitButton>
-          <GoogleAuthButton />
-        </form>
-      </CardContent>
-    </Card>
+            <div className='space-y-2'>
+              <div className='flex justify-between items-center'>
+                <Label htmlFor='password'>Contraseña</Label>
+                <Link
+                  className='text-xs text-muted-foreground hover:text-primary'
+                  href='/forgot-password'
+                >
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
+              <Input
+                type='password'
+                name='password'
+                placeholder='Tu contraseña'
+                required
+              />
+            </div>
+            <SubmitButton pendingText='Iniciando sesión...' className='w-full'>
+              Iniciar sesión
+            </SubmitButton>
+            <GoogleAuthButton />
+          </form>
+        </CardContent>
+      </Card>
+
+      <div className='w-full max-w-[500px] min-w-[256px] mx-auto text-center'>
+        <p className='text-sm text-muted-foreground'>
+          Para acceder al sistema, necesitas estar registrado por un administrador.
+          <br />
+          Si aún no tienes una cuenta, por favor contacta con tu administrador.
+        </p>
+      </div>
+    </div>
   )
 }
 

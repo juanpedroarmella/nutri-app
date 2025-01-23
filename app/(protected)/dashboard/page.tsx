@@ -1,9 +1,11 @@
 import { AuthRoutes } from '@/common/types/routes.types'
 import { userService } from '@/features/users/service/user.service'
-import { InfoIcon } from 'lucide-react'
 import { redirect } from 'next/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/common/components/ui/card'
+import { Badge } from '@/common/components/ui/badge'
+import { UserRole } from '@/features/users/types/user.types'
 
-export default async function ProtectedPage() {
+export default async function MyDataPage() {
   const user = await userService.getCurrentUser()
 
   if (!user) {
@@ -11,19 +13,44 @@ export default async function ProtectedPage() {
   }
 
   return (
-    <div className='flex-1 w-full flex flex-col items-center gap-12 p-4'>
-      <div className='bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center'>
-        <InfoIcon size='16' strokeWidth={2} />
-        Esta es una página protegida que solo puedes ver como usuario
-        autenticado
-      </div>
+    <div className='flex-1 w-full flex flex-col gap-6 p-6 max-w-2xl mx-auto'>
+      <h1 className='text-2xl font-bold'>Mis Datos</h1>
 
-      <div className='flex flex-col gap-2 items-start'>
-        <h2 className='font-bold text-2xl mb-4'>Detalles de tu usuario</h2>
-        <pre className='text-xs font-mono p-3 rounded border max-h-64 overflow-auto'>
-          {JSON.stringify(user, null, 2)}
-        </pre>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Información Personal</CardTitle>
+        </CardHeader>
+        <CardContent className='space-y-4'>
+          <div>
+            <label className='text-sm text-muted-foreground'>
+              Nombre completo
+            </label>
+            <p className='font-medium'>
+              {user.firstName} {user.lastName}
+            </p>
+          </div>
+          <div>
+            <label className='text-sm text-muted-foreground'>Email</label>
+            <p className='font-medium'>{user.email}</p>
+          </div>
+          <div>
+            <label className='text-sm text-muted-foreground'>Teléfono</label>
+            <p className='font-medium'>{user.phone || '-'}</p>
+          </div>
+          <div>
+            <label className='text-sm text-muted-foreground'>Rol</label>
+            <div>
+              <Badge variant={user.role === UserRole.ADMIN ? 'default' : 'secondary'}>
+                {user.role === UserRole.ADMIN ? 'Admin' : 'Usuario'}
+              </Badge>
+            </div>
+          </div>
+          <div>
+            <label className='text-sm text-muted-foreground'>ID de Usuario</label>
+            <p className='font-medium font-mono text-sm'>{user.id}</p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

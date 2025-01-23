@@ -1,2 +1,2 @@
-export const APP_NAME = 'Nutri App'
-export const APP_DESCRIPTION = 'Sistema de gestión de nutrición'
+export const APP_NAME = 'NutriGest Pro'
+export const APP_DESCRIPTION = 'Sistema de gestión profesional de nutrición'

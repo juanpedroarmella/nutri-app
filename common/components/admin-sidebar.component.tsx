@@ -27,7 +27,7 @@ export function AdminSidebar() {
 
   return (
     <div className="h-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <ScrollArea className="h-[calc(100vh-4rem)] px-4">
+      <ScrollArea className="lg:h-[calc(100vh-4rem)] px-4">
         <div className="flex flex-col gap-4 py-4">
           <div className="px-3 py-2 flex flex-col gap-1">
             <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">

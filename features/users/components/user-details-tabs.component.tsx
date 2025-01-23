@@ -28,7 +28,7 @@ export default function UserDetailsTabs({ user }: UserDetailsTabsProps) {
         <ClinicalHistoryTab user={user} />
       </TabsContent>
       <TabsContent value='documents'>
-        <DocumentsTab />
+        <DocumentsTab user={user} />
       </TabsContent>
     </Tabs>
   )

@@ -6,6 +6,7 @@ import { ThemeProvider } from 'next-themes'
 import './globals.css'
 import { MainNav } from '@/common/components/main-nav.component'
 import { Footer } from '@/common/components/footer.component'
+import { Providers } from './providers'
 
 const defaultUrl = EnvVariables.nextPublicAppUrl
 
@@ -23,20 +24,22 @@ export default function RootLayout({
   return (
     <html lang='en' className={GeistSans.className} suppressHydrationWarning>
       <body className='bg-background text-foreground'>
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-          disableTransitionOnChange
-        >
-          <main className='min-h-screen flex flex-col'>
-            <MainNav />
-            <div className='flex-1 flex flex-col items-center pt-16 w-full h-full justify-between max-w-7xl mx-auto'>
-              {children}
-            </div>
-            <Footer />
-          </main>
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <main className='min-h-screen flex flex-col'>
+              <MainNav />
+              <div className='flex-1 flex flex-col items-center pt-16 w-full h-full justify-between max-w-7xl mx-auto'>
+                {children}
+              </div>
+              <Footer />
+            </main>
+          </ThemeProvider>
+        </Providers>
         <Toaster />
       </body>
     </html>
