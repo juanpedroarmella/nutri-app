@@ -11,61 +11,59 @@ import {
 } from '@/common/components/ui/select'
 import { Switch } from '@/common/components/ui/switch'
 import { useToast } from '@/common/hooks/use-toast'
-import { documentService } from '@/features/documents/services/document.service'
 import { User } from '@/features/users/types/user.types'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Upload } from 'lucide-react'
-import { useState } from 'react'
+import { useActionState, useEffect } from 'react'
+import { useFormStatus } from 'react-dom'
+import { uploadDocument } from '../actions/document-create.action'
 
 interface Props {
   users: User[]
+  onSuccess?: () => void
 }
 
-export default function DocumentCreate({ users }: Props) {
-  const queryClient = useQueryClient()
-  const [isPublic, setIsPublic] = useState(false)
-  const [selectedUserId, setSelectedUserId] = useState<string>('')
+function SubmitButton() {
+  const { pending } = useFormStatus()
+
+  return (
+    <Button type='submit' disabled={pending}>
+      {pending ? (
+        'Subiendo...'
+      ) : (
+        <>
+          <Upload className='mr-2 h-4 w-4' />
+          Subir Documento
+        </>
+      )}
+    </Button>
+  )
+}
+
+export default function DocumentCreate({ users, onSuccess }: Props) {
   const { toast } = useToast()
+  const [state, formAction] = useActionState(uploadDocument, {
+    error: undefined,
+    success: false
+  })
 
-  const { mutate: uploadDocument, isPending: isUploading } = useMutation({
-    mutationFn: (formData: FormData) => {
-      const file = formData.get('file') as File
-      const name = formData.get('name') as string
-
-      return documentService.uploadDocument({
-        file,
-        name,
-        isPublic,
-        userId: isPublic ? undefined : selectedUserId
-      })
-    },
-    onSuccess: () => {
+  useEffect(() => {
+    if (state?.success) {
       toast({
         title: 'Éxito',
         description: 'Documento subido correctamente'
       })
-      queryClient.invalidateQueries({ queryKey: ['documents'] })
-      setIsPublic(false)
-      setSelectedUserId('')
-    },
-    onError: () => {
+      onSuccess?.()
+    } else if (state?.error) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'No se pudo subir el documento'
+        description: state.error
       })
     }
-  })
-
-  const handleUpload = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    uploadDocument(formData)
-    e.currentTarget.reset()
-  }
+  }, [state, toast, onSuccess])
 
   return (
-    <form onSubmit={handleUpload} className='space-y-4'>
+    <form action={formAction} className='space-y-4'>
       <div className='space-y-2'>
         <Label htmlFor='file'>Archivo</Label>
         <Input id='file' name='file' type='file' required />
@@ -77,45 +75,27 @@ export default function DocumentCreate({ users }: Props) {
       </div>
 
       <div className='flex items-center gap-2'>
-        <Switch
-          id='isPublic'
-          checked={isPublic}
-          onCheckedChange={setIsPublic}
-        />
+        <Switch id='isPublic' name='isPublic' />
         <Label htmlFor='isPublic'>Documento público</Label>
       </div>
 
-      {!isPublic && (
-        <div className='space-y-2'>
-          <Label htmlFor='userId'>Asignar a usuario</Label>
-          <Select value={selectedUserId} onValueChange={setSelectedUserId}>
-            <SelectTrigger>
-              <SelectValue placeholder='Selecciona un usuario' />
-            </SelectTrigger>
-            <SelectContent>
-              {users.map(u => (
-                <SelectItem key={u.id} value={u.id}>
-                  {u.firstName} {u.lastName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      )}
+      <div className='space-y-2'>
+        <Label htmlFor='userId'>Asignar a usuario</Label>
+        <Select name='userId' >
+          <SelectTrigger>
+            <SelectValue placeholder='Selecciona un usuario' />
+          </SelectTrigger>
+          <SelectContent>
+            {users.map(u => (
+              <SelectItem key={u.idAuth} value={u.idAuth}>
+                {u.firstName} {u.lastName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-      <Button
-        type='submit'
-        disabled={isUploading || (!isPublic && !selectedUserId)}
-      >
-        {isUploading ? (
-          'Subiendo...'
-        ) : (
-          <>
-            <Upload className='mr-2 h-4 w-4' />
-            Subir Documento
-          </>
-        )}
-      </Button>
+      <SubmitButton />
     </form>
   )
 }

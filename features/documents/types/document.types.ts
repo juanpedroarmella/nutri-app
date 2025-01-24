@@ -6,6 +6,11 @@ export interface Document {
   type: string
   isPublic: boolean
   userId?: string
+  user?: {
+    id: string
+    firstName: string
+    lastName: string
+  }
   createdAt: Date
   updatedAt: Date
 }
@@ -14,5 +19,5 @@ export interface CreateDocumentDTO {
   name: string
   file: File  
   isPublic: boolean
-  userId?: string // Opcional: si no es público, se asigna a un usuario
+  userId?: string
 } 

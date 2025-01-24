@@ -8,12 +8,14 @@ import { User } from '../types/user.types'
 import UserInfoTab from './tabs/user-info-tab.component'
 import ClinicalHistoryTab from './tabs/clinical-history-tab.component'
 import DocumentsTab from './tabs/documents-tab.component'
+import { Document } from '@/features/documents/types/document.types'
 
 interface UserDetailsTabsProps {
   user: User
+  documents: Document[]
 }
 
-export default function UserDetailsTabs({ user }: UserDetailsTabsProps) {
+export default function UserDetailsTabs({ user, documents }: UserDetailsTabsProps) {
   return (
     <Tabs defaultValue='user' className='w-full'>
       <TabsList className='mb-2'>
@@ -28,7 +30,7 @@ export default function UserDetailsTabs({ user }: UserDetailsTabsProps) {
         <ClinicalHistoryTab user={user} />
       </TabsContent>
       <TabsContent value='documents'>
-        <DocumentsTab user={user} />
+        <DocumentsTab user={user} documents={documents} />
       </TabsContent>
     </Tabs>
   )

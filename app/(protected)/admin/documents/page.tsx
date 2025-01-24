@@ -8,7 +8,10 @@ import DocumentCreate from '@/features/documents/components/document-create.comp
 import DocumentList from '@/features/documents/components/document-list.component'
 import { documentService } from '@/features/documents/services/document.service'
 import { userService } from '@/features/users/service/user.service'
-import { FileText } from 'lucide-react'
+import { FileText, Plus } from 'lucide-react'
+import { Button } from '@/common/components/ui/button'
+import { Suspense } from 'react'
+import CreateDocumentDialog from '@/features/documents/components/create-document-dialog.component'
 
 export default async function DocumentsPage() {
   const users = await userService.getUsers()
@@ -30,20 +33,17 @@ export default async function DocumentsPage() {
                 </p>
               </div>
             </div>
+            <CreateDocumentDialog users={users}>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Nuevo Documento
+              </Button>
+            </CreateDocumentDialog>
           </div>
         </CardHeader>
-        <CardContent className='grid gap-6'>
+        <CardContent>
           <div className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <h2 className='text-lg font-semibold'>Lista de Documentos</h2>
-            </div>
             <DocumentList documents={documents} />
-          </div>
-          <div className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <h2 className='text-lg font-semibold'>Subir Nuevo Documento</h2>
-            </div>
-            <DocumentCreate users={users} />
           </div>
         </CardContent>
       </Card>
