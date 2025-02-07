@@ -122,6 +122,7 @@ export class AuthService {
   async deleteUser(userId: string) {
     return await this.authRepository.deleteUser(userId)
   }
+
 }
 
 export const authService = AuthService.getInstance()

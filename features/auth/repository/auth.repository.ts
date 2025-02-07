@@ -68,7 +68,13 @@ export class AuthRepository {
   async deleteUser(userId: string) {
     const supabaseAdmin = await AuthRepository.getAdminClient()
 
-    return await supabaseAdmin.auth.admin.deleteUser(userId)
+    console.log('userId', userId)
+
+    const res = await supabaseAdmin.auth.admin.deleteUser(userId)
+
+    console.log('res', res)
+
+    return res
   }
 
   async editMe(data: { password: string }) {

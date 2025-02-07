@@ -5,6 +5,7 @@ import { FC } from 'react'
 import { createClient } from '@/common/utils/supabase/client'
 import { useToast } from '@/common/hooks/use-toast'
 import { AuthRoutes } from '@/common/types/routes.types'
+import { EnvVariables } from '@/common/utils/env.utils'
 
 const GoogleAuthButton: FC = () => {
   const supabase = createClient()
@@ -12,10 +13,15 @@ const GoogleAuthButton: FC = () => {
 
   const handleGoogleAuth = async () => {
     try {
+      const redirectUrl = EnvVariables.nextPublicAppUrl || window.location.origin
+      
       supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}${AuthRoutes.CALLBACK}`
+          redirectTo: `${redirectUrl}${AuthRoutes.CALLBACK}`,
+          queryParams: {
+            redirect_to: '/dashboard'
+          }
         }
       })
     } catch (error) {
