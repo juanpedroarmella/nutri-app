@@ -31,13 +31,15 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main className='min-h-screen flex flex-col'>
+            <div className='min-h-screen flex flex-col'>
               <MainNav />
-              <div className='flex-1 flex flex-col items-center pt-16 w-full h-full justify-between max-w-7xl mx-auto'>
-                {children}
-              </div>
+              <main className='flex-1 flex items-center justify-center mt-[60px]'>
+                <div className='w-full max-w-7xl mx-auto px-4'>
+                  {children}
+                </div>
+              </main>
               <Footer />
-            </main>
+            </div>
           </ThemeProvider>
         </Providers>
         <Toaster />
