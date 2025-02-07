@@ -23,8 +23,6 @@ export const forgotPasswordAction = async (formData: FormData) => {
     redirectTo: `${origin}${AuthRoutes.CALLBACK}?redirect_to=${AuthRoutes.RESET_PASSWORD}`
   })
 
-  console.log(res)
-
   if (res.error) {
     console.error(res.error.message)
     return {

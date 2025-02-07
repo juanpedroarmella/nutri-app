@@ -2,13 +2,17 @@ import { ClinicalDataDto } from '../dto/clinical-history.dto'
 import { ClinicalDataEntity } from '../entity/clinical-history.entity'
 import { ClinicalHistoryRepository } from '../repository/clinical-history.repository'
 import { ClinicalData } from '../types/clinical-history.types'
+import { AuthService, authService } from '@/features/auth/services/auth.service'
+
 export class ClinicalHistoryService {
   private readonly clinicalHistoryRepository: ClinicalHistoryRepository
+  private readonly authService: AuthService
 
   private static instance: ClinicalHistoryService | null = null
 
   private constructor() {
     this.clinicalHistoryRepository = new ClinicalHistoryRepository()
+    this.authService = authService
   }
 
   public static getInstance(): ClinicalHistoryService {
@@ -19,16 +23,24 @@ export class ClinicalHistoryService {
   }
 
   async getClinicalHistoryByUserId(userId: string) {
+    console.log('userId', userId)
+    const isAdmin = await this.authService.isCurrentUserAdmin()
     const clinicalHistory =
-      await this.clinicalHistoryRepository.getClinicalHistoryByUserId(userId)
 
-    if (!clinicalHistory) {
-      return null
+      await this.clinicalHistoryRepository.getClinicalHistoryByUserId(
+        userId,
+        isAdmin
+      )
+
+    console.log(clinicalHistory)
+
+    if (!clinicalHistory || clinicalHistory.error) {
+      return { error: 'No se encontró la historia clínica', history: null }
     }
 
-    const dto = new ClinicalDataDto(clinicalHistory)
+    const dto = new ClinicalDataDto(clinicalHistory.data)
 
-    return dto.getClinicalData()
+    return { history: dto.getClinicalData(), error: null }
   }
 
   async updateClinicalHistory(
@@ -39,14 +51,22 @@ export class ClinicalHistoryService {
     const data = this.bodyToEntity(body)
 
     if (!id) {
-      return await this.clinicalHistoryRepository.createClinicalHistory({
+      const res = await this.clinicalHistoryRepository.createClinicalHistory({
         ...data,
         id_user: userId
       })
+      if (res.error) {
+        return { error: res.error.message }
+      }
+      return res
     }
 
     const clinicalHistory =
       await this.clinicalHistoryRepository.updateClinicalHistory(data, id)
+
+    if (clinicalHistory.error) {
+      return { error: clinicalHistory.error.message }
+    }
 
     return clinicalHistory
   }

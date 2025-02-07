@@ -58,9 +58,7 @@ export class DocumentService {
 
   async getDocumentsByUser(userId: string): Promise<Document[]> {
     const supabase = await createClientAdmin()
-  
-    console.log(userId)
-    
+      
     // Obtener documentos del usuario
     const { data: documents, error: docsError } = await supabase
       .from('documents')
@@ -165,6 +163,30 @@ export class DocumentService {
       const { error } = await supabase.from('documents').delete().eq('id', id)
       if (error) throw error
     }
+  }
+
+  async getPublicDocuments(): Promise<Document[]> {
+    const supabase = await createClientAdmin()
+    
+    const { data: documents, error } = await supabase
+      .from('documents')
+      .select('*')
+      .eq('is_public', true)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+
+    return documents.map(doc => ({
+      id: doc.id,
+      name: doc.name,
+      url: doc.url,
+      size: doc.size,
+      type: doc.type,
+      isPublic: doc.is_public,
+      userId: doc.user_id,
+      createdAt: doc.created_at,
+      updatedAt: doc.updated_at
+    }))
   }
 }
 

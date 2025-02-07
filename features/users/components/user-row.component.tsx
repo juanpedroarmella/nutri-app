@@ -27,8 +27,6 @@ export default function UserRow({ user, currentUser }: UserRowProps) {
     router.push(`${AdminRoutes.USERS}/${user.id}`)
   }
 
-  console.log(user)
-
   return (
     <TableRow className='hover:cursor-pointer' onClick={handleRowClick}>
       <TableCell className='font-medium'>

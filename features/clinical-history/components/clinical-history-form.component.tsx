@@ -6,7 +6,7 @@ import { Input } from '@/common/components/ui/input'
 import { Label } from '@/common/components/ui/label'
 import { Textarea } from '@/common/components/ui/textarea'
 import { useToast } from '@/common/hooks/use-toast'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useImc } from '../hooks/useImc.hook'
 import { ClinicalData } from '../types/clinical-history.types'
 import { ExerciseRoutineInput } from './exercise-routine-input.component'
@@ -15,16 +15,26 @@ import { updateHistory } from '../actions/update-history.action'
 interface ClinicalHistoryFormProps {
   userId: string
   initialData: Partial<ClinicalData> | null
+  error: string | null
 }
 
 export default function ClinicalHistoryForm({
   userId,
-  initialData
+  initialData,
+  error
 }: ClinicalHistoryFormProps) {
   const { toast } = useToast()
   const [isPending, setIsPending] = useState(false)
 
-  console.log(initialData)
+  useEffect(() => {
+    if (error) {
+      toast({
+        variant: 'default',
+        title: 'Información',
+        description: error
+      })
+    }
+  }, [error, toast])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -58,7 +68,18 @@ export default function ClinicalHistoryForm({
         supplements: formData.getAll('supplements') as string[]
       }
 
-      await updateHistory(data, userId, initialData?.id)
+      console.log(userId)
+
+      const res = await updateHistory(data, userId, initialData?.id)
+
+      if (res?.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: res.error || 'Ocurrió un error al guardar los datos'
+        })
+        return
+      }
 
       toast({
         title: 'Historia clínica guardada',

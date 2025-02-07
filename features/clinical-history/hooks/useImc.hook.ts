@@ -43,8 +43,6 @@ export const useImc = (initialData: {
     imc: 0
   })
 
-  console.log(state)
-
   const onChangeWeight = (weight: number) => {
     dispatch({ type: ActionType.SET_WEIGHT, payload: weight })
   }

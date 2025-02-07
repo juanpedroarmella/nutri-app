@@ -16,12 +16,16 @@ export const updateHistory = async (
     return { error: 'No tienes permisos para realizar esta acción' }
   }
 
-  await clinicalHistoryService.updateClinicalHistory(
+  const res = await clinicalHistoryService.updateClinicalHistory(
     data,
     userId,
     id
   )
 
-  revalidatePath(AdminRoutes.USERS)
 
+  if (res.error) {
+    return { error: res.error }
+  }
+
+  revalidatePath(AdminRoutes.USERS)
 }

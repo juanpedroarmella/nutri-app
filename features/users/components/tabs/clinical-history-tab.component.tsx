@@ -4,10 +4,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/common/components/ui/card'
-import { User } from '../../types/user.types'
 import ClinicalHistoryForm from '@/features/clinical-history/components/clinical-history-form.component'
 import { clinicalHistoryService } from '@/features/clinical-history/services/clinical-history.service'
-import { ClinicalData } from '@/features/clinical-history/types/clinical-history.types'
+import { User } from '../../types/user.types'
 
 interface ClinicalHistoryTabProps {
   user: User
@@ -16,9 +15,8 @@ interface ClinicalHistoryTabProps {
 export default async function ClinicalHistoryTab({
   user
 }: ClinicalHistoryTabProps) {
-  const history = await clinicalHistoryService.getClinicalHistoryByUserId(
-    user.id
-  )
+  const { error, history } =
+    await clinicalHistoryService.getClinicalHistoryByUserId(user.idAuth)
 
   return (
     <Card>
@@ -28,7 +26,11 @@ export default async function ClinicalHistoryTab({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ClinicalHistoryForm userId={user.id} initialData={history} />
+        <ClinicalHistoryForm
+          userId={user.idAuth}
+          initialData={history}
+          error={error}
+        />
       </CardContent>
     </Card>
   )
