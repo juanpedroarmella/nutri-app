@@ -84,7 +84,7 @@ function LoginContent() {
         <p className='text-sm text-muted-foreground'>
           Para acceder al sistema, necesitas estar registrado por un administrador.
           <br />
-          Si aún no tienes una cuenta, por favor contacta con tu administrador.
+          Si aún no tienes una cuenta, por favor contacta con tu nutricionista.
         </p>
       </div>
     </div>
