@@ -23,7 +23,6 @@ export class ClinicalHistoryService {
   }
 
   async getClinicalHistoryByUserId(userId: string) {
-    console.log('userId', userId)
     const isAdmin = await this.authService.isCurrentUserAdmin()
     const clinicalHistory =
 
@@ -32,7 +31,6 @@ export class ClinicalHistoryService {
         isAdmin
       )
 
-    console.log(clinicalHistory)
 
     if (!clinicalHistory || clinicalHistory.error) {
       return { error: 'No se encontró la historia clínica', history: null }

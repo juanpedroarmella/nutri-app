@@ -5,7 +5,6 @@ import { ClinicalData } from '../types/clinical-history.types'
 import { useToast } from '@/common/hooks/use-toast'
 import { useEffect } from 'react'
 
-
 interface ClinicalHistoryViewProps {
   clinicalData: ClinicalData | null
   error: string | null
@@ -44,7 +43,9 @@ export default function ClinicalHistoryView({
         { label: 'IMC', value: clinicalData.imc },
         {
           label: 'Fecha de Nacimiento',
-          value: new Date(clinicalData.birthDate).toLocaleDateString()
+          value: clinicalData.birthDate
+            ? new Date(clinicalData.birthDate).toLocaleDateString()
+            : '-'
         },
         { label: 'Ocupación', value: clinicalData.occupation }
       ]
@@ -58,15 +59,17 @@ export default function ClinicalHistoryView({
         },
         {
           label: 'Patologías',
-          value: clinicalData.patologies.join(', ') || '-'
+          value: clinicalData.patologies?.join(', ') || '-'
         },
+
         {
           label: 'Medicamentos',
-          value: clinicalData.medications.join(', ') || '-'
+          value: clinicalData.medications?.join(', ') || '-'
         },
+
         {
           label: 'Análisis Clínicos',
-          value: clinicalData.clinicalAnalyses.join(', ') || '-'
+          value: clinicalData.clinicalAnalyses?.join(', ') || '-'
         }
       ]
     },
@@ -76,20 +79,24 @@ export default function ClinicalHistoryView({
         { label: 'Consumo de Agua', value: clinicalData.waterConsumption },
         {
           label: 'Alimentos Preferidos',
-          value: clinicalData.foodLike.join(', ') || '-'
+          value: clinicalData.foodLike?.join(', ') || '-'
         },
         {
           label: 'Alimentos que no gustan',
-          value: clinicalData.foodDislike.join(', ') || '-'
+          value: clinicalData.foodDislike?.join(', ') || '-'
         },
+
+
         {
           label: 'Condimentos',
-          value: clinicalData.seasoningsConsumption.join(', ') || '-'
+          value: clinicalData.seasoningsConsumption?.join(', ') || '-'
         },
+
         {
           label: 'Suplementos',
-          value: clinicalData.supplements.join(', ') || '-'
+          value: clinicalData.supplements?.join(', ') || '-'
         }
+
       ]
     },
     {

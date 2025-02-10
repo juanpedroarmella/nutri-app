@@ -34,8 +34,8 @@ const reducer = (state: State, action: Action) => {
 }
 
 export const useImc = (initialData: {
-  weight?: number 
-  size?: number 
+  weight?: number | null
+  size?: number | null
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     weight: initialData?.weight || 0,

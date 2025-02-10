@@ -44,7 +44,7 @@ function LoginContent() {
   }
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-4 mt-10'>
       <Card className='w-full max-w-[500px] min-w-[256px] mx-auto'>
         <CardHeader>
           <h1 className='text-2xl font-medium'>Iniciar sesión</h1>

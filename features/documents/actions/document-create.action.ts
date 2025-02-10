@@ -10,7 +10,7 @@ type State = {
   success: boolean
 }
 
-export async function uploadDocument(prevState: State, formData: FormData): Promise<State> {
+export async function uploadDocument(formData: FormData): Promise<State> {
   try {
     const file = formData.get('file') as File
     const name = formData.get('name') as string
@@ -29,7 +29,9 @@ export async function uploadDocument(prevState: State, formData: FormData): Prom
 
     const fileExt = file.name.split('.').pop()
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
-    const filePath = isPublic ? `public/${fileName}` : `users/${userId}/${fileName}`
+    const filePath = isPublic
+      ? `public/${fileName}`
+      : `users/${userId}/${fileName}`
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from(BUCKET_NAME)
@@ -46,7 +48,7 @@ export async function uploadDocument(prevState: State, formData: FormData): Prom
         url: uploadData.path,
         size: file.size,
         type: file.type,
-        is_public:isPublic,
+        is_public: isPublic,
         user_id: isPublic ? null : userId
       })
       .select()
@@ -60,4 +62,4 @@ export async function uploadDocument(prevState: State, formData: FormData): Prom
     console.error('Upload error:', error)
     return { error: 'Error al subir el documento', success: false }
   }
-} 
+}

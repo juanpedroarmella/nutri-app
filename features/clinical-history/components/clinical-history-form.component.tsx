@@ -43,32 +43,60 @@ export default function ClinicalHistoryForm({
     try {
       const formData = new FormData(e.currentTarget)
       const data: Partial<ClinicalData> = {
-        age: Number(formData.get('age')),
-        size: Number(formData.get('size')),
-        weight: Number(formData.get('weight')),
-        birthDate: new Date(formData.get('birthDate') as string),
-        occupation: formData.get('occupation') as string,
-        reasonForConsultation: formData.get('reasonForConsultation') as string,
-        patologies: formData.getAll('patologies') as string[],
-        clinicalHistory: formData.getAll('clinicalHistory') as string[],
-        medications: formData.getAll('medications') as string[],
-        clinicalAnalyses: formData.getAll('clinicalAnalyses') as string[],
-        imc: Number(formData.get('imc')),
-        prevNutrTreatments: formData.getAll('prevNutrTreatments') as string[],
-        dailyRoutine: Number(formData.get('dailyRoutine')),
-        foodLike: formData.getAll('foodLike') as string[],
-        foodDislike: formData.getAll('foodDislike') as string[],
-        waterConsumption: formData.get('waterConsumption') as string,
-        seasoningsConsumption: formData.getAll(
-          'seasoningsConsumption'
-        ) as string[],
-        observations: formData.get('observations') as string,
-        possibleTreatment: formData.get('possibleTreatment') as string,
-        foodRoutine: formData.get('foodRoutine') as string,
-        supplements: formData.getAll('supplements') as string[]
-      }
+        age: formData.get('age') ? Number(formData.get('age')) : null,
+        size: formData.get('size') ? Number(formData.get('size')) : null,
+        weight: formData.get('weight') ? Number(formData.get('weight')) : null,
+        birthDate: formData.get('birthDate')
+          ? new Date(formData.get('birthDate') as string)
+          : null,
+        occupation: (formData.get('occupation') as string) || null,
+        reasonForConsultation:
+          (formData.get('reasonForConsultation') as string) || null,
+        patologies: formData.getAll('patologies').length
+          ? (formData.getAll('patologies') as string[])
+          : null,
 
-      console.log(userId)
+        clinicalHistory: formData.getAll('clinicalHistory').length
+          ? (formData.getAll('clinicalHistory') as string[])
+          : null,
+        medications: formData.getAll('medications').length
+          ? (formData.getAll('medications') as string[])
+          : null,
+        clinicalAnalyses: formData.getAll('clinicalAnalyses').length
+          ? (formData.getAll('clinicalAnalyses') as string[])
+          : null,
+        imc: formData.get('imc') ? Number(formData.get('imc')) : null,
+        prevNutrTreatments: formData.getAll('prevNutrTreatments').length
+          ? (formData.getAll('prevNutrTreatments') as string[])
+          : null,
+        dailyRoutine: formData.get('dailyRoutine')
+          ? Number(formData.get('dailyRoutine'))
+          : null,
+        foodLike: formData.getAll('foodLike').length
+          ? (formData.getAll('foodLike') as string[])
+          : null,
+        foodDislike: formData.getAll('foodDislike').length
+          ? (formData.getAll('foodDislike') as string[])
+          : null,
+        waterConsumption: formData.get('waterConsumption')
+          ? (formData.get('waterConsumption') as string)
+          : null,
+        seasoningsConsumption: formData.getAll('seasoningsConsumption').length
+          ? (formData.getAll('seasoningsConsumption') as string[])
+          : null,
+        observations: formData.get('observations')
+          ? (formData.get('observations') as string)
+          : null,
+        possibleTreatment: formData.get('possibleTreatment')
+          ? (formData.get('possibleTreatment') as string)
+          : null,
+        foodRoutine: formData.get('foodRoutine')
+          ? (formData.get('foodRoutine') as string)
+          : null,
+        supplements: formData.getAll('supplements').length
+          ? (formData.getAll('supplements') as string[])
+          : null
+      }
 
       const res = await updateHistory(data, userId, initialData?.id)
 
@@ -115,10 +143,11 @@ export default function ClinicalHistoryForm({
               name='age'
               placeholder='Ingrese la edad'
               type='number'
-              defaultValue={initialData?.age}
+              defaultValue={initialData?.age || ''}
               required
             />
           </article>
+
           <article className='flex flex-col gap-3 w-full'>
             <Label htmlFor='size'>Altura (cm)</Label>
             <Input
@@ -127,7 +156,7 @@ export default function ClinicalHistoryForm({
               type='number'
               onChange={e => onChangeSize(Number(e.target.value))}
               placeholder='Ingrese la altura'
-              defaultValue={initialData?.size}
+              defaultValue={initialData?.size || ''}
               required
             />
           </article>
@@ -142,7 +171,7 @@ export default function ClinicalHistoryForm({
               type='number'
               placeholder='Ingrese el peso'
               onChange={e => onChangeWeight(Number(e.target.value))}
-              defaultValue={initialData?.weight}
+              defaultValue={initialData?.weight || ''}
               required
             />
           </article>
@@ -177,7 +206,7 @@ export default function ClinicalHistoryForm({
             id='reasonForConsultation'
             name='reasonForConsultation'
             placeholder='Ingrese el motivo de consulta'
-            defaultValue={initialData?.reasonForConsultation}
+            defaultValue={initialData?.reasonForConsultation || ''}
             required
           />
         </article>
@@ -188,7 +217,7 @@ export default function ClinicalHistoryForm({
             id='occupation'
             name='occupation'
             placeholder='Ingrese la ocupación'
-            defaultValue={initialData?.occupation}
+            defaultValue={initialData?.occupation || ''}
             required
           />
         </article>
@@ -203,21 +232,21 @@ export default function ClinicalHistoryForm({
           label='Patologías'
           name='patologies'
           placeholder='Agregar patología'
-          defaultValue={initialData?.patologies}
+          defaultValue={initialData?.patologies || []}
         />
 
         <DynamicListInput
           label='Medicamentos'
           name='medications'
           placeholder='Agregar medicamento'
-          defaultValue={initialData?.medications}
+          defaultValue={initialData?.medications || []}
         />
 
         <DynamicListInput
           label='Analisis clinicos'
           name='clinicalAnalyses'
           placeholder='Agregar analisis'
-          defaultValue={initialData?.clinicalAnalyses}
+          defaultValue={initialData?.clinicalAnalyses || []}
           className='w-full'
         />
 
@@ -225,7 +254,7 @@ export default function ClinicalHistoryForm({
           label='Tratamientos nutricionales previos'
           name='prevNutrTreatments'
           placeholder='Agregar tratamientos nutricionales previos'
-          defaultValue={initialData?.prevNutrTreatments}
+          defaultValue={initialData?.prevNutrTreatments || []}
           className='w-full'
         />
       </section>
@@ -234,14 +263,14 @@ export default function ClinicalHistoryForm({
         <header>
           <h2 className='text-xl font-semibold'>Hábitos y Preferencias</h2>
         </header>
-        <ExerciseRoutineInput defaultValue={initialData?.dailyRoutine} />
+        <ExerciseRoutineInput defaultValue={initialData?.dailyRoutine || 0} />
         <article className='flex flex-col gap-3'>
           <Label htmlFor='waterConsumption'>Consumo de agua (L)</Label>
           <Input
             id='waterConsumption'
             placeholder='Ingrese el consumo de agua diario'
             name='waterConsumption'
-            defaultValue={initialData?.waterConsumption}
+            defaultValue={initialData?.waterConsumption || ''}
           />
         </article>
         <div className='flex w-full gap-3'>
@@ -249,7 +278,7 @@ export default function ClinicalHistoryForm({
             label='Alimentos habituales'
             name='foodLike'
             placeholder='Agregar alimento'
-            defaultValue={initialData?.foodLike}
+            defaultValue={initialData?.foodLike || []}
             className='w-full'
           />
 
@@ -257,7 +286,7 @@ export default function ClinicalHistoryForm({
             label='Alimentos que no le gustan'
             name='foodDislike'
             placeholder='Agregar alimento'
-            defaultValue={initialData?.foodDislike}
+            defaultValue={initialData?.foodDislike || []}
             className='w-full'
           />
         </div>
@@ -265,13 +294,13 @@ export default function ClinicalHistoryForm({
           label='Consumo de condimentos'
           name='seasoningsConsumption'
           placeholder='Agregar condimentos'
-          defaultValue={initialData?.seasoningsConsumption}
+          defaultValue={initialData?.seasoningsConsumption || []}
         />
         <DynamicListInput
           label='Consumo de suplementos'
           name='supplements'
           placeholder='Agregar suplementos'
-          defaultValue={initialData?.supplements}
+          defaultValue={initialData?.supplements || []}
           className='w-full'
         />
         <article className='flex flex-col gap-3'>
@@ -280,7 +309,7 @@ export default function ClinicalHistoryForm({
             id='foodRoutine'
             placeholder='Ingrese la rutina diaria alimenticia'
             name='foodRoutine'
-            defaultValue={initialData?.foodRoutine}
+            defaultValue={initialData?.foodRoutine || ''}
           />
         </article>
         <article className='flex flex-col gap-3'>
@@ -289,7 +318,7 @@ export default function ClinicalHistoryForm({
             id='possibleTreatment'
             name='possibleTreatment'
             placeholder='Ingrese el posible tratamiento'
-            defaultValue={initialData?.possibleTreatment}
+            defaultValue={initialData?.possibleTreatment || ''}
           />
         </article>
         <article className='flex flex-col gap-3'>
@@ -298,7 +327,7 @@ export default function ClinicalHistoryForm({
             id='observations'
             placeholder='Ingrese las observaciones'
             name='observations'
-            defaultValue={initialData?.observations}
+            defaultValue={initialData?.observations || ''}
           />
         </article>
       </section>

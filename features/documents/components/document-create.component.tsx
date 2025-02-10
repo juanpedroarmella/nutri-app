@@ -13,8 +13,7 @@ import { Switch } from '@/common/components/ui/switch'
 import { useToast } from '@/common/hooks/use-toast'
 import { User } from '@/features/users/types/user.types'
 import { Upload } from 'lucide-react'
-import { useActionState, useEffect, useState } from 'react'
-import { useFormStatus } from 'react-dom'
+import { useState, useTransition } from 'react'
 import { uploadDocument } from '../actions/document-create.action'
 
 interface Props {
@@ -22,85 +21,67 @@ interface Props {
   onSuccess?: () => void
 }
 
-function SubmitButton() {
-  const { pending } = useFormStatus()
-
-  return (
-    <Button type='submit' disabled={pending}>
-      {pending ? (
-        'Subiendo...'
-      ) : (
-        <>
-          <Upload className='mr-2 h-4 w-4' />
-          Subir Documento
-        </>
-      )}
-    </Button>
-  )
-}
-
 export default function DocumentCreate({ users, onSuccess }: Props) {
   const { toast } = useToast()
   const [isPublic, setIsPublic] = useState(false)
   const [fileName, setFileName] = useState('')
-  const [state, formAction] = useActionState(uploadDocument, {
-    error: undefined,
-    success: false
-  })
+  const [isPending, startTransition] = useTransition()
 
-  useEffect(() => {
-    if (state?.success) {
-      toast({
-        title: 'Éxito',
-        description: 'Documento subido correctamente'
-      })
-      onSuccess?.()
-    } else if (state?.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: state.error
-      })
-    }
-  }, [state, toast, onSuccess])
+  const handleSubmit = async (formData: FormData) => {
+    startTransition(async () => {
+      const result = await uploadDocument(formData)
+      if (result.success) {
+        toast({
+          title: 'Éxito',
+          description: 'Documento subido correctamente'
+        })
+        onSuccess?.()
+      } else if (result.error) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: result.error
+        })
+      }
+    })
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // Obtener el nombre del archivo sin la extensión
       const name = file.name.split('.').slice(0, -1).join('.')
       setFileName(name)
     }
   }
 
   return (
-    <form action={formAction} className='space-y-4'>
+    <form action={handleSubmit} className='space-y-4'>
       <div className='space-y-2'>
         <Label htmlFor='file'>Archivo</Label>
-        <Input 
-          id='file' 
-          name='file' 
-          type='file' 
-          required 
+        <Input
+          id='file'
+          name='file'
+          type='file'
+          required
           onChange={handleFileChange}
         />
       </div>
 
       <div className='space-y-2'>
         <Label htmlFor='name'>Nombre del documento</Label>
-        <Input 
-          id='name' 
-          name='name' 
-          required 
+        <Input
+          id='name'
+          name='name'
+          required
           value={fileName}
-          onChange={(e) => setFileName(e.target.value)}
+          onChange={e => setFileName(e.target.value)}
         />
       </div>
 
       <div className='flex items-center gap-2'>
-        <Switch 
-          id='isPublic' 
-          name='isPublic' 
+        <Switch
+          id='isPublic'
+          name='isPublic'
           checked={isPublic}
           onCheckedChange={setIsPublic}
         />
@@ -110,7 +91,11 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
       {!isPublic && (
         <div className='space-y-2'>
           <Label htmlFor='userId'>Asignar a usuario</Label>
-          <Select name='userId' required>
+          <Select
+            name='userId'
+            required
+            defaultValue={users.length === 1 ? users[0].idAuth : ''}
+          >
             <SelectTrigger>
               <SelectValue placeholder='Selecciona un usuario' />
             </SelectTrigger>
@@ -125,7 +110,16 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
         </div>
       )}
 
-      <SubmitButton />
+      <Button type='submit' disabled={isPending}>
+        {isPending ? (
+          'Subiendo...'
+        ) : (
+          <>
+            <Upload className='mr-2 h-4 w-4' />
+            Subir Documento
+          </>
+        )}
+      </Button>
     </form>
   )
 }

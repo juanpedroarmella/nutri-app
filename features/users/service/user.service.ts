@@ -71,7 +71,13 @@ export class UserService {
   }
 
   async editUser(userId: string, data: Partial<UserEntity>) {
-    return await this.userRepository.editUser(userId, data)
+    const res = await this.userRepository.editUser(userId, data)
+
+    if (res.error) {
+      return { error: res.error }
+    }
+
+    return { success: true }
   }
 
   async getUserByAuthId(userId: string) {

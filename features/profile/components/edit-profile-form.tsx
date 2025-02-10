@@ -148,7 +148,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
               <Input
                 id='phone'
                 name='phone'
-                type='tel'
+                type='number'
                 defaultValue={user.phone || '-'}
               />
             </div>

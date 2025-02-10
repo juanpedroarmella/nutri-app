@@ -13,9 +13,9 @@ import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <main className='flex-1'>
+    <main className='flex-1 my-10'>
       {/* Hero Section */}
-      <section className='py-20 bg-gradient-to-b from-primary/10 to-background rounded-lg mt-4'>
+      <section className='py-20 bg-gradient-to-b from-primary/10 to-background rounded-lg mt-10'>
         <div className='container px-4 md:px-6'>
           <div className='flex flex-col items-center space-y-4 text-center'>
             <div className='space-y-2'>

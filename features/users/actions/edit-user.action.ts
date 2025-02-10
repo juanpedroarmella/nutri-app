@@ -15,7 +15,7 @@ export async function editUser(userId: string, data: Partial<UserEntity>) {
 
   const isAdmin = await authService.isCurrentUserAdmin()
 
-  const canEdit = currentUser.id === userId || isAdmin
+  const canEdit = currentUser.idAuth === userId || isAdmin
 
   if (!canEdit) {
     return { error: 'No tienes permisos para editar este usuario' }
