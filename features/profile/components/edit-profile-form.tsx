@@ -156,7 +156,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
             <Button type='submit' disabled={isPending} className='w-full'>
               {isPending ? (
                 <>
-                  <Spinner />
+                  <Spinner className='mr-2'/>
                   Actualizando...
                 </>
               ) : (
@@ -195,7 +195,7 @@ export default function EditProfileForm({ user }: EditProfileFormProps) {
             <Button type='submit' disabled={isPending} className='w-full'>
               {isPending ? (
                 <>
-                  <Spinner />
+                  <Spinner className='mr-2'/>
                   Actualizando...
                 </>
               ) : (

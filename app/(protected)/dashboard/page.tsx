@@ -17,6 +17,7 @@ import DocumentList from '@/features/documents/components/document-list.componen
 import { documentService } from '@/features/documents/services/document.service'
 import { userService } from '@/features/users/service/user.service'
 import { redirect } from 'next/navigation'
+import WeightTrackingSection from '@/features/tracking/components/weight-tracking-section.component'
 
 export default async function DashboardPage() {
   const user = await userService.getCurrentUser()
@@ -32,6 +33,8 @@ export default async function DashboardPage() {
 
   return (
     <div className='flex-1 w-full flex flex-col gap-6 p-6 max-w-7xl mx-auto'>
+      <WeightTrackingSection userId={user.idAuth} />
+      
       <Card>
         <CardHeader>
           <CardTitle>Mi Dashboard</CardTitle>
