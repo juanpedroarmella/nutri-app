@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Romi <onboarding@rominalasca.com>',
+      from: 'Lic. Romina Lasca <onboarding@rominalasca.com>',
       to: [userEmail],
       subject: `Bienvenido a ${APP_NAME}`,
       react: WelcomeEmail({ userEmail, password, redirectUrl })
