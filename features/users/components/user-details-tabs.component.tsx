@@ -33,7 +33,7 @@ export default async function UserDetailsTabs({ id }: { id: string }) {
         <ClinicalHistoryTab user={user} />
       </TabsContent>
       <TabsContent value='tracking'>
-        <TrackingTab />
+        <TrackingTab userId={user.idAuth} />
       </TabsContent>
       <TabsContent value='documents'>
         <DocumentsTab user={user} />

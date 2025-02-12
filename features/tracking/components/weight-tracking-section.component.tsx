@@ -6,9 +6,6 @@ import {
   CardTitle
 } from '@/common/components/ui/card'
 import { Skeleton } from '@/common/components/ui/skeleton'
-import { AuthRoutes } from '@/common/types/routes.types'
-import { userService } from '@/features/users/service/user.service'
-import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 import { weightTrackingService } from '../services/weight-tracking.service'
 import WeightTrackingChart from './weight-tracking-chart.component'
@@ -17,21 +14,18 @@ import WeightTrackingList from './weight-tracking-list.component'
 
 interface WeightTrackingSectionProps {
   isAdmin?: boolean
+  userId: string
 }
 
 async function SuspensedWeightTrackingSection({
-  isAdmin
+  isAdmin,
+  userId
 }: {
   isAdmin: boolean
+  userId: string
 }) {
-  const user = await userService.getCurrentUser()
-
-  if (!user) {
-    return redirect(AuthRoutes.SIGN_IN)
-  }
-
   const { data: trackings, error } =
-    await weightTrackingService.getWeightTrackingByUserId(user.idAuth)
+    await weightTrackingService.getWeightTrackingByUserId(userId)
 
   if (error) {
     return <p className='text-destructive'>{error}</p>
@@ -42,10 +36,10 @@ async function SuspensedWeightTrackingSection({
       {trackings && trackings.length > 0 && (
         <WeightTrackingChart trackings={trackings} />
       )}
-      {isAdmin && <WeightTrackingForm userId={user.idAuth} />}
+      {isAdmin && <WeightTrackingForm userId={userId} />}
       <WeightTrackingList
         trackings={trackings || []}
-        userId={user.idAuth}
+        userId={userId}
         isAdmin={isAdmin}
       />
     </>
@@ -53,7 +47,8 @@ async function SuspensedWeightTrackingSection({
 }
 
 export default async function WeightTrackingSection({
-  isAdmin = false
+  isAdmin = false,
+  userId
 }: WeightTrackingSectionProps) {
   return (
     <Card>
@@ -69,7 +64,7 @@ export default async function WeightTrackingSection({
             </div>
           }
         >
-          <SuspensedWeightTrackingSection isAdmin={isAdmin} />
+          <SuspensedWeightTrackingSection isAdmin={isAdmin} userId={userId} />
         </Suspense>
       </CardContent>
     </Card>

@@ -60,6 +60,13 @@ export default function WeightTrackingList({
         </TableRow>
       </TableHeader>
       <TableBody>
+        {trackings.length === 0 && (
+          <TableRow>
+            <TableCell colSpan={4} className='h-24 text-center'>
+              No hay datos de seguimiento
+            </TableCell>
+          </TableRow>
+        )}
         {trackings.map(tracking => (
           <TableRow key={tracking.id}>
             <TableCell>
