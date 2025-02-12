@@ -3,7 +3,7 @@ import { createClient } from '@/common/utils/supabase/server'
 import { encodedRedirect } from '@/common/utils/utils'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { AuthRoutes } from '@/common/types/routes.types'
+import { AuthRoutes, ProtectedRoutes } from '@/common/types/routes.types'
 
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get('email')?.toString()
@@ -20,7 +20,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
   }
 
   const res = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}${AuthRoutes.CALLBACK}?redirect_to=${AuthRoutes.RESET_PASSWORD}`
+    redirectTo: `${origin}${AuthRoutes.CALLBACK}?redirect_to=${ProtectedRoutes.RESET_PASSWORD}`
   })
 
   if (res.error) {

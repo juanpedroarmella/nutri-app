@@ -27,7 +27,8 @@ export const resetPasswordAction = async (formData: FormData) => {
   if (error) {
     return {
       type: 'error',
-      message: 'Error al actualizar la contraseña, recuerda que no debe ser igual a la contraseña anterior'
+      message:
+        'Error al actualizar la contraseña, recuerda que no debe ser igual a la contraseña anterior'
     }
   }
 

@@ -1,11 +1,11 @@
 export enum ProtectedRoutes {
   DASHBOARD = '/dashboard',
   ADMIN = '/admin',
-  PROFILE = '/profile'
+  PROFILE = '/profile',
+  RESET_PASSWORD = '/reset-password'
 }
 
 export enum AuthRoutes {
-  RESET_PASSWORD = '/reset-password',
   CALLBACK = '/auth/callback',
   FORGOT_PASSWORD = '/forgot-password',
   SIGN_IN = '/sign-in'
