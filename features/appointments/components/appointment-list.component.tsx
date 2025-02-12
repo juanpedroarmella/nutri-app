@@ -57,8 +57,6 @@ export default function AppointmentList({
     })
   }
 
-  console.log(appointments)
-
   return (
     <Table>
       <TableHeader>

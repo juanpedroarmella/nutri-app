@@ -19,7 +19,6 @@ A professional nutrition management platform built with Next.js and Supabase, de
 - **Language:** TypeScript
 - **Database & Auth:** Supabase
 - **Styling:** Tailwind CSS + shadcn/ui
-- **State Management:** React Query
 - **Forms:** React Hook Form + Zod
 - **Email:** Resend
 - **Charts:** Recharts

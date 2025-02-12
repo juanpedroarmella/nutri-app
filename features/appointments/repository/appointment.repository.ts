@@ -70,8 +70,6 @@ export class AppointmentRepository {
   async createAppointment(data: Partial<AppointmentEntity>) {
     const supabase = await createClientAdmin()
 
-    console.log(data)
-
     return await supabase.from(DATABASE_NAME).insert(data).select().single()
   }
 

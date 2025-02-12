@@ -7,19 +7,16 @@ import { revalidatePath } from 'next/cache'
 export async function deleteUser(authId: string) {
   const currentUser = await authService.getCurrentUser()
 
-  console.log('authId', authId)
   if (!currentUser) {
     return { error: 'Usuario no autenticado' }
   }
 
-  // Solo permitir eliminación si es admin
   const isAdmin = await authService.isCurrentUserAdmin()
 
   if (!isAdmin) {
     return { error: 'No tienes permisos para eliminar usuarios' }
   }
 
-  // Prevenir que un admin se elimine a sí mismo
   if (currentUser.id === authId) {
     return { error: 'No puedes eliminarte a ti mismo' }
   }

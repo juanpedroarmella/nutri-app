@@ -8,11 +8,6 @@ const resend = new Resend(EnvVariables.resendApiKey)
 export async function POST(request: Request) {
   const { userEmail, password, redirectUrl } = await request.json()
 
-  console.log('userEmail', userEmail)
-  console.log('password', password)
-  console.log('redirectUrl', redirectUrl)
-  console.log('resendApiKey', EnvVariables.resendApiKey)
-
   try {
     const { data, error } = await resend.emails.send({
       from: 'Lic. Romina Lasca <onboarding@rominalasca.com>',
@@ -22,7 +17,6 @@ export async function POST(request: Request) {
     })
 
     if (error) {
-      console.log('error', error)
       return Response.json({ error }, { status: 500 })
     }
 
