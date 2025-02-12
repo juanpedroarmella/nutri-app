@@ -13,20 +13,20 @@ import {
   TooltipTrigger
 } from '@/common/components/ui/tooltip'
 import { User } from '@/features/users/types/user.types'
-import { getDownloadURL } from '../actions/document-download.action'
+import { downloadDocument } from '../actions/document-download.action'
 
 interface Props {
   document: Document & { user: User }
 }
 
-export default function DocumentComponent({ document }: Props) {
+export default function DocumentComponent({ document: doc }: Props) {
   const [isPending, startTransition] = useTransition()
   const { toast } = useToast()
 
   const handleDelete = () => {
     startTransition(async () => {
       try {
-        await deleteDocument(document.id)
+        await deleteDocument(doc.id)
         toast({
           title: 'Éxito',
           description: 'Documento eliminado correctamente'
@@ -43,9 +43,25 @@ export default function DocumentComponent({ document }: Props) {
 
   const handleDownload = async () => {
     try {
-      const url = await getDownloadURL(document.url)
-      window.open(url, '_blank', 'noopener,noreferrer')
+      const data = await downloadDocument(doc.id)
+      
+      // Crear el blob desde los datos base64
+      const buffer = Buffer.from(data.buffer, 'base64')
+      const blob = new Blob([buffer], { type: data.contentType })
+      const url = window.URL.createObjectURL(blob)
+      
+      // Crear un link temporal para la descarga
+      const a = window.document.createElement('a')
+      a.href = url
+      a.download = data.fileName
+      window.document.body.appendChild(a)
+      a.click()
+      
+      // Limpieza
+      window.URL.revokeObjectURL(url)
+      window.document.body.removeChild(a)
     } catch (error) {
+      console.log('Error al descargar el documento', error)
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -63,7 +79,7 @@ export default function DocumentComponent({ document }: Props) {
   }
 
   const getFileIcon = () => {
-    const type = document.type.split('/')[0]
+    const type = doc.type.split('/')[0]
     return (
       {
         'application/pdf': 'bg-red-500/10 text-red-500',
@@ -80,12 +96,12 @@ export default function DocumentComponent({ document }: Props) {
           <FileText className='w-6 h-6' />
         </div>
         <div>
-          <h3 className='font-medium'>{document.name}</h3>
+          <h3 className='font-medium'>{doc.name}</h3>
           <div className='flex items-center gap-2 flex-wrap text-sm text-muted-foreground'>
-            <span>{formatFileSize(document.size)}</span>
+            <span>{formatFileSize(doc.size)}</span>
             <span>•</span>
-            <span>{document.isPublic ? 'Público' : 'Privado'}</span>
-            {!document.isPublic && document.user && (
+            <span>{doc.isPublic ? 'Público' : 'Privado'}</span>
+            {!doc.isPublic && doc.user && (
               <>
                 <span>•</span>
                 <TooltipProvider>
@@ -94,7 +110,7 @@ export default function DocumentComponent({ document }: Props) {
                       <div className='flex items-center gap-1 text-primary'>
                         <UserIcon className='w-3 h-3' />
                         <span>
-                          {document.user.firstName} {document.user.lastName}
+                          {doc.user.firstName} {doc.user.lastName}
                         </span>
                       </div>
                     </TooltipTrigger>

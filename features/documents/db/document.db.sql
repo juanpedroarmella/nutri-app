@@ -2,6 +2,7 @@ create table documents (
   id uuid default uuid_generate_v4() primary key,
   name text not null,
   url text not null,
+  s3_key text not null,
   size integer not null,
   type text not null,
   is_public boolean default false,

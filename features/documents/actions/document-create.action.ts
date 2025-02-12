@@ -1,17 +1,22 @@
 'use server'
 
-import { createClientAdmin } from '@/common/utils/supabase/server'
+import { documentService } from '../services/document.service'
 import { revalidatePath } from 'next/cache'
+import { authService } from '@/features/auth/services/auth.service'
 
-const BUCKET_NAME = 'documents'
-
-type State = {
+interface State {
   error?: string
   success: boolean
 }
 
 export async function uploadDocument(formData: FormData): Promise<State> {
   try {
+    const isAdmin = await authService.isCurrentUserAdmin()
+
+    if (!isAdmin) {
+      return { error: 'No tienes permisos para subir documentos', success: false }
+    }
+
     const file = formData.get('file') as File
     const name = formData.get('name') as string
     const isPublic = formData.get('isPublic') === 'on'
@@ -21,40 +26,16 @@ export async function uploadDocument(formData: FormData): Promise<State> {
       return { error: 'Todos los campos son requeridos', success: false }
     }
 
-    const supabase = await createClientAdmin()
+    if (!isPublic && !userId) {
+      return { error: 'Debes asignar un usuario al documento', success: false }
+    }
 
-    // Convertir el File a ArrayBuffer para poder subirlo
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
-
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
-    const filePath = isPublic
-      ? `public/${fileName}`
-      : `users/${userId}/${fileName}`
-
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from(BUCKET_NAME)
-      .upload(filePath, buffer, {
-        contentType: file.type
-      })
-
-    if (uploadError) throw uploadError
-
-    const { error: dbError } = await supabase
-      .from('documents')
-      .insert({
-        name,
-        url: uploadData.path,
-        size: file.size,
-        type: file.type,
-        is_public: isPublic,
-        user_id: isPublic ? null : userId
-      })
-      .select()
-      .single()
-
-    if (dbError) throw dbError
+    await documentService.uploadDocument({
+      file,
+      name,
+      isPublic,
+      userId
+    })
 
     revalidatePath('/admin/documents')
     return { success: true }

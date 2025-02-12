@@ -1,52 +1,53 @@
-import { createClient, createClientAdmin } from '@/common/utils/supabase/server'
+import { createClientAdmin } from '@/common/utils/supabase/server'
 import { CreateDocumentDTO, Document } from '../types/document.types'
-import { User } from '@/features/users/types/user.types'
-
-const BUCKET_NAME = 'documents'
+import { s3Service } from './s3.service'
 
 export class DocumentService {
-  private static instance: DocumentService;
+  private static instance: DocumentService
 
   private constructor() {}
 
   public static getInstance(): DocumentService {
     if (!DocumentService.instance) {
-      DocumentService.instance = new DocumentService();
+      DocumentService.instance = new DocumentService()
     }
-    return DocumentService.instance;
+    return DocumentService.instance
   }
 
   async uploadDocument(data: CreateDocumentDTO): Promise<Document> {
     const { file, name, isPublic, userId } = data
     const supabase = await createClientAdmin()
 
-    // Convertir el File a ArrayBuffer para poder subirlo desde el servidor
+    // Convert File to Buffer
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
+    // Generate S3 key
     const fileExt = file.name.split('.').pop()
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
-    const filePath = isPublic
+    const s3Key = isPublic
       ? `public/${fileName}`
       : `users/${userId}/${fileName}`
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from(BUCKET_NAME)
-      .upload(filePath, buffer, {
-        contentType: file.type
-      })
+    // Upload to S3
+    await s3Service.uploadFile(buffer, s3Key, file.type)
 
-    if (uploadError) throw uploadError
+    // Get signed URL
+    const url = await s3Service.getSignedUrl(s3Key)
 
+    console.log('url', url)
+
+    // Save to database
     const { data: document, error: dbError } = await supabase
       .from('documents')
       .insert({
         name,
-        url: uploadData.path,
+        url,
+        s3_key: s3Key,
         size: file.size,
         type: file.type,
-        isPublic,
-        userId: isPublic ? null : userId
+        is_public: isPublic,
+        user_id: isPublic ? null : userId
       })
       .select()
       .single()
@@ -56,9 +57,41 @@ export class DocumentService {
     return document
   }
 
+  async getDocuments(): Promise<Document[]> {
+    const supabase = await createClientAdmin()
+    const { data: documents, error } = await supabase
+      .from('documents')
+      .select(`
+        id,
+        name,
+        size,
+        type,
+        is_public,
+        user_id,
+        created_at,
+        updated_at,
+        s3_key
+      `)
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+
+    return documents.map(doc => ({
+      id: doc.id,
+      name: doc.name,
+      size: doc.size,
+      type: doc.type,
+      isPublic: doc.is_public,
+      userId: doc.user_id,
+      createdAt: doc.created_at,
+      updatedAt: doc.updated_at,
+      s3_key: doc.s3_key
+    }))
+  }
+
   async getDocumentsByUser(userId: string): Promise<Document[]> {
     const supabase = await createClientAdmin()
-      
+
     // Obtener documentos del usuario
     const { data: documents, error: docsError } = await supabase
       .from('documents')
@@ -81,24 +114,26 @@ export class DocumentService {
     return documents.map(doc => ({
       id: doc.id,
       name: doc.name,
-      url: doc.url,
       size: doc.size,
       type: doc.type,
       isPublic: doc.is_public,
       userId: doc.user_id,
       createdAt: doc.created_at,
       updatedAt: doc.updated_at,
-      user: !doc.is_public ? {
-        id: userId,
-        firstName: user.first_name,
-        lastName: user.last_name
-      } : undefined
-    }))
+      s3_key: doc.s3_key,
+      user: !doc.is_public
+        ? {
+            id: userId,
+            firstName: user.first_name,
+            lastName: user.last_name
+          }
+        : undefined
+    } as Document))
   }
 
   async getAllDocuments() {
     const supabase = await createClientAdmin()
-    
+
     // Primero obtenemos todos los documentos
     const { data: documents, error: docsError } = await supabase
       .from('documents')
@@ -134,18 +169,21 @@ export class DocumentService {
     return documents.map(doc => ({
       id: doc.id,
       name: doc.name,
-      url: doc.url,
       size: doc.size,
       type: doc.type,
       isPublic: doc.is_public,
       userId: doc.user_id,
       createdAt: doc.created_at,
       updatedAt: doc.updated_at,
-      user: doc.user_id && !doc.is_public ? {
-        id: doc.user_id,
-        firstName: userMap.get(doc.user_id)?.first_name || '',
-        lastName: userMap.get(doc.user_id)?.last_name || ''
-      } : undefined
+      s3_key: doc.s3_key,
+      user:
+        doc.user_id && !doc.is_public
+          ? {
+              id: doc.user_id,
+              firstName: userMap.get(doc.user_id)?.first_name || '',
+              lastName: userMap.get(doc.user_id)?.last_name || ''
+            }
+          : undefined
     }))
   }
 
@@ -154,12 +192,12 @@ export class DocumentService {
 
     const { data: document } = await supabase
       .from('documents')
-      .select('url')
+      .select('s3_key')
       .eq('id', id)
       .single()
 
     if (document) {
-      await supabase.storage.from(BUCKET_NAME).remove([document.url])
+      await s3Service.deleteFile(document.s3_key)
       const { error } = await supabase.from('documents').delete().eq('id', id)
       if (error) throw error
     }
@@ -167,7 +205,7 @@ export class DocumentService {
 
   async getPublicDocuments(): Promise<Document[]> {
     const supabase = await createClientAdmin()
-    
+
     const { data: documents, error } = await supabase
       .from('documents')
       .select('*')
@@ -176,17 +214,20 @@ export class DocumentService {
 
     if (error) throw error
 
-    return documents.map(doc => ({
-      id: doc.id,
-      name: doc.name,
-      url: doc.url,
-      size: doc.size,
-      type: doc.type,
-      isPublic: doc.is_public,
-      userId: doc.user_id,
-      createdAt: doc.created_at,
-      updatedAt: doc.updated_at
-    }))
+    return documents.map(
+      doc =>
+        ({
+          id: doc.id,
+          name: doc.name,
+          size: doc.size,
+          type: doc.type,
+          isPublic: doc.is_public,
+          userId: doc.user_id,
+          createdAt: doc.created_at,
+          updatedAt: doc.updated_at,
+          s3_key: doc.s3_key
+        }) as Document
+    )
   }
 }
 

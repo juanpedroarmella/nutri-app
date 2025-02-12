@@ -94,7 +94,7 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
           <Select
             name='userId'
             required
-            defaultValue={users.length === 1 ? users[0].idAuth : ''}
+            defaultValue={users.length === 1 ? users[0].idAuth : undefined}
           >
             <SelectTrigger>
               <SelectValue placeholder='Selecciona un usuario' />

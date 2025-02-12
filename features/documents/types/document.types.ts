@@ -1,18 +1,18 @@
 export interface Document {
   id: string
   name: string
-  url: string
   size: number
   type: string
   isPublic: boolean
-  userId?: string
+  userId: string | null
+  createdAt: string
+  updatedAt: string
+  s3_key: string
   user?: {
     id: string
     firstName: string
     lastName: string
   }
-  createdAt: Date
-  updatedAt: Date
 }
 
 export interface CreateDocumentDTO {
