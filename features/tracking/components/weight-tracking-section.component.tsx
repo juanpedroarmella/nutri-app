@@ -30,7 +30,7 @@ export default async function WeightTrackingSection({
       <CardHeader>
         <CardTitle>Seguimiento de Peso</CardTitle>
       </CardHeader>
-      <CardContent className='space-y-6'>
+      <CardContent className='flex flex-col gap-6'>
         {trackings && trackings.length > 0 && (
           <WeightTrackingChart trackings={trackings} />
         )}

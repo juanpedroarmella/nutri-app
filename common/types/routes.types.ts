@@ -11,10 +11,18 @@ export enum AuthRoutes {
   SIGN_IN = '/sign-in'
 }
 
+export enum DashboardRoutes {
+  HOME = '/dashboard',
+  TRACKING = '/dashboard/tracking',
+  DOCUMENTS = '/dashboard/documents',
+  APPOINTMENTS = '/dashboard/appointments'
+}
+
 export enum AdminRoutes {
   HOME = '/admin',
   USERS = '/admin/users',
-  DOCUMENTS = '/admin/documents'
+  DOCUMENTS = '/admin/documents',
+  APPOINTMENTS = '/admin/appointments'
 }
 
 export enum ApiRoutes {

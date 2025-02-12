@@ -21,7 +21,7 @@ export default function DocumentsTab({ user, documents }: DocumentsTabProps) {
   return (
     <Card>
       <CardHeader>
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between flex-wrap gap-4'>
           <CardTitle>
             Documentos de {user.firstName} {user.lastName}
           </CardTitle>

@@ -10,8 +10,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
-} from "@/common/components/ui/tooltip"
+  TooltipTrigger
+} from '@/common/components/ui/tooltip'
 import { User } from '@/features/users/types/user.types'
 import { getDownloadURL } from '../actions/document-download.action'
 
@@ -64,22 +64,24 @@ export default function DocumentComponent({ document }: Props) {
 
   const getFileIcon = () => {
     const type = document.type.split('/')[0]
-    return {
-      'application/pdf': 'bg-red-500/10 text-red-500',
-      'image': 'bg-blue-500/10 text-blue-500',
-      'text': 'bg-green-500/10 text-green-500'
-    }[type] || 'bg-primary/10 text-primary'
+    return (
+      {
+        'application/pdf': 'bg-red-500/10 text-red-500',
+        image: 'bg-blue-500/10 text-blue-500',
+        text: 'bg-green-500/10 text-green-500'
+      }[type] || 'bg-primary/10 text-primary'
+    )
   }
 
   return (
-    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
-      <div className="flex items-center gap-4">
-        <div className={cn("p-2 rounded-lg", getFileIcon())}>
-          <FileText className="w-6 h-6" />
+    <div className='flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors flex-wrap gap-4'>
+      <div className='flex items-center gap-4'>
+        <div className={cn('p-2 rounded-lg', getFileIcon())}>
+          <FileText className='w-6 h-6' />
         </div>
         <div>
-          <h3 className="font-medium">{document.name}</h3>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <h3 className='font-medium'>{document.name}</h3>
+          <div className='flex items-center gap-2 flex-wrap text-sm text-muted-foreground'>
             <span>{formatFileSize(document.size)}</span>
             <span>•</span>
             <span>{document.isPublic ? 'Público' : 'Privado'}</span>
@@ -89,8 +91,8 @@ export default function DocumentComponent({ document }: Props) {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1 text-primary">
-                        <UserIcon className="w-3 h-3" />
+                      <div className='flex items-center gap-1 text-primary'>
+                        <UserIcon className='w-3 h-3' />
                         <span>
                           {document.user.firstName} {document.user.lastName}
                         </span>
@@ -106,22 +108,18 @@ export default function DocumentComponent({ document }: Props) {
           </div>
         </div>
       </div>
-      
-      <div className="flex items-center gap-2">
-        <Button 
-          variant="outline" 
-          size="icon"
-          onClick={handleDownload}
-        >
-          <Download className="w-4 h-4" />
+
+      <div className='flex items-center gap-2'>
+        <Button variant='outline' size='icon' onClick={handleDownload}>
+          <Download className='w-4 h-4' />
         </Button>
-        <Button 
-          variant="destructive" 
-          size="icon"
+        <Button
+          variant='destructive'
+          size='icon'
           onClick={handleDelete}
           disabled={isPending}
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className='w-4 h-4' />
         </Button>
       </div>
     </div>
