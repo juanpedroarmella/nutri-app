@@ -1,25 +1,25 @@
+import { Spinner } from '@/common/components/spinner.component'
+import { TableSkeleton } from '@/common/components/table-skeleton'
+import { Button } from '@/common/components/ui/button'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle
 } from '@/common/components/ui/card'
-import { Calendar, Plus } from 'lucide-react'
-import AppointmentSection from '@/features/appointments/components/appointment-section.component'
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger
 } from '@/common/components/ui/tabs'
-import { Button } from '@/common/components/ui/button'
-import { Dialog, DialogTrigger } from '@/common/components/ui/dialog'
+import AppointmentSection from '@/features/appointments/components/appointment-section.component'
 import CreateAppointmentDialog from '@/features/appointments/components/create-appointment-dialog.component'
 import { userService } from '@/features/users/service/user.service'
+import { Calendar } from 'lucide-react'
+import { Suspense } from 'react'
 
 export default async function AppointmentsPage() {
-  const users = await userService.getUsers()
-
   return (
     <div className='flex-1 w-full flex flex-col gap-6 p-6 max-w-7xl mx-auto'>
       <Card>
@@ -36,8 +36,16 @@ export default async function AppointmentsPage() {
                 </p>
               </div>
             </div>
-
-            <CreateAppointmentDialog users={users} />
+            <Suspense
+              fallback={
+                <Button className='gap-2' disabled>
+                  <Spinner />
+                  Nuevo Turno
+                </Button>
+              }
+            >
+              <CreateAppointmentSection />
+            </Suspense>
           </div>
         </CardHeader>
         <CardContent>
@@ -48,20 +56,39 @@ export default async function AppointmentsPage() {
             </TabsList>
 
             <TabsContent value='all'>
-              <AppointmentSection isAdmin showUserInfo />
+              <Card>
+                <CardHeader>
+                  <CardTitle>Todos los turnos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Suspense fallback={<TableSkeleton columns={4} rows={3} />}>
+                    <AppointmentSection isAdmin showUserInfo />
+                  </Suspense>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value='today'>
-              <AppointmentSection
-                isAdmin
-                showUserInfo
-                onlyToday
-                title='Turnos de Hoy'
-              />
+              <Card>
+                <CardHeader>
+                  <CardTitle>Todos los turnos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Suspense fallback={<TableSkeleton columns={4} rows={3} />}>
+                    <AppointmentSection isAdmin showUserInfo onlyToday />
+                  </Suspense>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
     </div>
   )
+}
+
+async function CreateAppointmentSection() {
+  const users = await userService.getUsers()
+
+  return <CreateAppointmentDialog users={users} />
 }

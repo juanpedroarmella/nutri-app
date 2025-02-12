@@ -1,23 +1,23 @@
-'use client'
+import { Button } from '@/common/components/ui/button'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle
 } from '@/common/components/ui/card'
-import { Document } from '@/features/documents/types/document.types'
-import { User } from '@/features/users/types/user.types'
-import DocumentList from '@/features/documents/components/document-list.component'
 import CreateDocumentDialog from '@/features/documents/components/create-document-dialog.component'
+import DocumentList from '@/features/documents/components/document-list.component'
+import { documentService } from '@/features/documents/services/document.service'
+import { User } from '@/features/users/types/user.types'
 import { Plus } from 'lucide-react'
-import { Button } from '@/common/components/ui/button'
 
 interface DocumentsTabProps {
   user: User
-  documents: Document[]
 }
 
-export default function DocumentsTab({ user, documents }: DocumentsTabProps) {
+export default async function DocumentsTab({ user }: DocumentsTabProps) {
+  const documents = await documentService.getDocumentsByUser(user.idAuth)
+
   return (
     <Card>
       <CardHeader>

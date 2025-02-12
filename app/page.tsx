@@ -14,7 +14,6 @@ import Link from 'next/link'
 export default function HomePage() {
   return (
     <main className='flex-1 my-10'>
-      {/* Hero Section */}
       <section className='py-20 bg-gradient-to-b from-primary/10 to-background rounded-lg mt-10'>
         <div className='container px-4 md:px-6'>
           <div className='flex flex-col items-center space-y-4 text-center'>
@@ -36,7 +35,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className='py-20 container px-4 md:px-6'>
         <h2 className='text-3xl font-bold text-center mb-12'>
           Beneficios para tu salud
@@ -65,7 +63,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className='py-16 bg-gradient-to-b from-background to-primary/10 rounded-lg mb-4'>
         <div className='container px-4 md:px-6'>
           <div className='flex flex-col items-center space-y-4 text-center'>

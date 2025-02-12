@@ -13,12 +13,14 @@ import { useState } from 'react'
 import { Button } from '@/common/components/ui/button'
 import { Plus } from 'lucide-react'
 import { User } from '@/features/users/types/user.types'
-
+import { userService } from '@/features/users/service/user.service'
 interface CreateAppointmentDialogProps {
   users: User[]
 }
 
-export default function CreateAppointmentDialog({ users }: CreateAppointmentDialogProps) {
+export default function CreateAppointmentDialog({
+  users
+}: CreateAppointmentDialogProps) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -37,10 +39,7 @@ export default function CreateAppointmentDialog({ users }: CreateAppointmentDial
           </DialogDescription>
         </DialogHeader>
         <div className='grid gap-4 py-4'>
-          <AppointmentForm 
-            users={users} 
-            onSuccess={() => setOpen(false)}
-          />
+          <AppointmentForm users={users} onSuccess={() => setOpen(false)} />
         </div>
       </DialogContent>
     </Dialog>

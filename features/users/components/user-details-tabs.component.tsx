@@ -4,19 +4,20 @@ import {
   TabsList,
   TabsTrigger
 } from '@/common/components/ui/tabs'
-import { User } from '../types/user.types'
-import UserInfoTab from './tabs/user-info-tab.component'
+import { notFound } from 'next/navigation'
+import { userService } from '../service/user.service'
 import ClinicalHistoryTab from './tabs/clinical-history-tab.component'
 import DocumentsTab from './tabs/documents-tab.component'
-import { Document } from '@/features/documents/types/document.types'
 import TrackingTab from './tabs/tracking-tab.component'
+import UserInfoTab from './tabs/user-info-tab.component'
 
-interface UserDetailsTabsProps {
-  user: User
-  documents: Document[]
-}
+export default async function UserDetailsTabs({ id }: { id: string }) {
+  const user = await userService.getUser(id)
 
-export default function UserDetailsTabs({ user, documents }: UserDetailsTabsProps) {
+  if (!user) {
+    notFound()
+  }
+
   return (
     <Tabs defaultValue='user' className='w-full'>
       <TabsList className='mb-2'>
@@ -32,10 +33,10 @@ export default function UserDetailsTabs({ user, documents }: UserDetailsTabsProp
         <ClinicalHistoryTab user={user} />
       </TabsContent>
       <TabsContent value='tracking'>
-        <TrackingTab user={user} />
+        <TrackingTab />
       </TabsContent>
       <TabsContent value='documents'>
-        <DocumentsTab user={user} documents={documents} />
+        <DocumentsTab user={user} />
       </TabsContent>
     </Tabs>
   )

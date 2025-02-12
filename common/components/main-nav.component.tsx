@@ -3,6 +3,8 @@ import { hasEnvVars } from '../utils/supabase/check-env-vars'
 import { EnvVarWarning } from './env-var-warning'
 import HeaderAuth from './header-auth'
 import Link from 'next/link'
+import { Suspense } from 'react'
+import { UserCardSkeleton } from './user-card-skeleton.component'
 
 export function MainNav() {
   return (
@@ -11,7 +13,13 @@ export function MainNav() {
         <div className='flex gap-5 items-center font-semibold'>
           <Link href={'/'}>{APP_NAME}</Link>
         </div>
-        {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+        {!hasEnvVars ? (
+          <EnvVarWarning />
+        ) : (
+          <Suspense fallback={<UserCardSkeleton />}>
+            <HeaderAuth />
+          </Suspense>
+        )}
       </div>
     </nav>
   )
