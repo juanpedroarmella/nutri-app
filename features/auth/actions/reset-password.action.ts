@@ -9,14 +9,14 @@ export const resetPasswordAction = async (formData: FormData) => {
   if (!password || !confirmPassword) {
     return {
       type: 'error',
-      message: 'Password and confirm password are required'
+      message: 'Los campos de contraseña son requeridos'
     }
   }
 
   if (password !== confirmPassword) {
     return {
       type: 'error',
-      message: 'Passwords do not match'
+      message: 'Las contraseñas no coinciden'
     }
   }
 
@@ -27,12 +27,12 @@ export const resetPasswordAction = async (formData: FormData) => {
   if (error) {
     return {
       type: 'error',
-      message: 'Password update failed'
+      message: 'Error al actualizar la contraseña, recuerda que no debe ser igual a la contraseña anterior'
     }
   }
 
   return {
     type: 'success',
-    message: 'Password updated'
+    message: 'Contraseña actualizada correctamente'
   }
 }

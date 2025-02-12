@@ -49,12 +49,10 @@ export default function ResetPassword() {
       <Input
         type='password'
         name='confirmPassword'
-        placeholder='Confirm password'
+        placeholder='Confirmar contraseña'
         required
       />
-      <SubmitButton>
-        Restablecer contraseña
-      </SubmitButton>
+      <SubmitButton>Restablecer contraseña</SubmitButton>
     </form>
   )
 }
