@@ -21,9 +21,9 @@ import { Suspense } from 'react'
 
 export default async function AppointmentsPage() {
   return (
-    <div className='flex-1 w-full flex flex-col gap-6 p-6 max-w-7xl mx-auto'>
+    <div className='flex-1 w-full flex flex-col gap-6 p-3 sm:p-6 max-w-7xl mx-auto'>
       <Card>
-        <CardHeader>
+        <CardHeader className='border-b mb-4'>
           <div className='flex items-center justify-between flex-wrap gap-4'>
             <div className='flex items-center space-x-4'>
               <div className='p-2 bg-primary/10 rounded-lg'>
@@ -56,16 +56,11 @@ export default async function AppointmentsPage() {
             </TabsList>
 
             <TabsContent value='all'>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Todos los turnos</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Suspense fallback={<TableSkeleton columns={4} rows={3} />}>
-                    <AppointmentSection isAdmin showUserInfo />
-                  </Suspense>
-                </CardContent>
-              </Card>
+              <h2 className='text-xl font-semibold mb-2'>Todos los turnos</h2>
+
+              <Suspense fallback={<TableSkeleton columns={4} rows={3} />}>
+                <AppointmentSection isAdmin showUserInfo />
+              </Suspense>
             </TabsContent>
 
             <TabsContent value='today'>

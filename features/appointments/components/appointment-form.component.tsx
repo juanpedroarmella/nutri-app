@@ -166,7 +166,7 @@ export default function AppointmentForm({
           )}
         />
 
-        <Button type='submit' disabled={isPending}>
+        <Button type='submit' disabled={isPending} className='w-full'>
           {isPending ? 'Guardando...' : 'Crear Turno'}
         </Button>
       </form>

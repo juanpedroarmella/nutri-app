@@ -5,13 +5,15 @@ import HeaderAuth from './header-auth'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { UserCardSkeleton } from './user-card-skeleton.component'
+import Image from 'next/image'
 
 export function MainNav() {
   return (
     <nav className='w-full fixed top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-center border-b border-b-foreground/10 h-16'>
       <div className='w-full flex justify-between items-center p-3 px-5 text-sm max-w-7xl mx-auto'>
-        <div className='flex gap-5 items-center font-semibold'>
-          <Link href={'/'}>{APP_NAME}</Link>
+        <div className='flex gap-1 items-center font-semibold'>
+          <Image src='/logo.svg'  alt='Main Logo' width={34} height={34} />
+          <Link href={'/'} className='text-lg text-primary font-normal'>{APP_NAME}</Link>
         </div>
         {!hasEnvVars ? (
           <EnvVarWarning />

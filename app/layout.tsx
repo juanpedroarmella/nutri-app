@@ -1,19 +1,23 @@
+import { Footer } from '@/common/components/footer.component'
+import { MainNav } from '@/common/components/main-nav.component'
 import { Toaster } from '@/common/components/ui/toaster'
-import { APP_DESCRIPTION, APP_NAME } from '@/common/constants/app.constants'
 import { EnvVariables } from '@/common/utils/env.utils'
 import { GeistSans } from 'geist/font/sans'
+import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
-import { MainNav } from '@/common/components/main-nav.component'
-import { Footer } from '@/common/components/footer.component'
 import { Providers } from './providers'
 
 const defaultUrl = EnvVariables.nextPublicAppUrl
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: `${APP_NAME}`,
-  description: APP_DESCRIPTION
+  title: 'Nutrición Profesional',
+  description: 'Portal de nutrición profesional personalizada',
+  icons: {
+    icon: '/logo.svg',
+    apple: '/logo.svg'
+  }
 }
 
 export default function RootLayout({
@@ -22,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang='en' className={GeistSans.className} suppressHydrationWarning>
+    <html lang='es' className={GeistSans.className} suppressHydrationWarning>
       <body className='bg-background text-foreground'>
         <Providers>
           <ThemeProvider
@@ -34,9 +38,7 @@ export default function RootLayout({
             <div className='min-h-screen flex flex-col'>
               <MainNav />
               <main className='flex-1 flex items-start justify-center mt-[60px]'>
-                <div className='w-full max-w-7xl mx-auto px-4'>
-                  {children}
-                </div>
+                <div className='w-full max-w-7xl mx-auto sm:px-4'>{children}</div>
               </main>
               <Footer />
             </div>

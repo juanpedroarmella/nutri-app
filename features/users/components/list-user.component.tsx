@@ -36,15 +36,12 @@ async function UserTable() {
 
 export default function ListUserComponent() {
   return (
-    <Card>
-      <CardHeader>
-        <h2 className='text-xl font-semibold'>Usuarios</h2>
-      </CardHeader>
-      <CardContent>
-        <Suspense fallback={<TableSkeleton columns={5} rows={5} />}>
-          <UserTable />
-        </Suspense>
-      </CardContent>
-    </Card>
+    <>
+      <h2 className='text-xl font-semibold mb-2'>Usuarios del sistema</h2>
+
+      <Suspense fallback={<TableSkeleton columns={5} rows={5} />}>
+        <UserTable />
+      </Suspense>
+    </>
   )
 }

@@ -38,7 +38,7 @@ async function SuspensedDocumentsPage() {
 
 export default async function DocumentsPage() {
   return (
-    <div className='flex-1 w-full flex flex-col gap-6 p-6 max-w-7xl mx-auto'>
+    <div className='flex-1 w-full flex flex-col gap-6 p-3 sm:p-6 max-w-7xl mx-auto'>
       <Tabs defaultValue='my-documents'>
         <TabsList className='mb-4'>
           <TabsTrigger value='my-documents'>Mis Documentos</TabsTrigger>

@@ -20,7 +20,7 @@ export default async function DocumentsTab({ user }: DocumentsTabProps) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className='border-b mb-4'>
         <div className='flex items-center justify-between flex-wrap gap-4'>
           <CardTitle>
             Documentos de {user.firstName} {user.lastName}
