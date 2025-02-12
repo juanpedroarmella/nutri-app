@@ -7,16 +7,54 @@ import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
 import { Providers } from './providers'
+import { APP_NAME, APP_DESCRIPTION } from '@/common/constants/app.constants'
 
 const defaultUrl = EnvVariables.nextPublicAppUrl
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: 'Nutrición Profesional',
-  description: 'Portal de nutrición profesional personalizada',
+  title: {
+    default: APP_NAME,
+    template: `%s | ${APP_NAME}`
+  },
+  description: APP_DESCRIPTION,
+  keywords: [
+    'nutrición',
+    'salud',
+    'planes nutricionales',
+    'seguimiento nutricional',
+    'nutricionista',
+    'Romina Lasca'
+  ],
+  authors: [{ name: 'Romina Lasca' }],
+  creator: 'Romina Lasca',
+  publisher: 'Romina Lasca',
+  openGraph: {
+    type: 'website',
+    locale: 'es_AR',
+    url: defaultUrl,
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    siteName: APP_NAME,
+    images: [
+      {
+        url: '/logo.png',
+        width: 800,
+        height: 600,
+        alt: 'Logo Nutrición Profesional - Romina Lasca'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    images: ['/logo.png']
+  },
   icons: {
-    icon: '/logo.svg',
-    apple: '/logo.svg'
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png'
   }
 }
 
