@@ -1,18 +1,4 @@
 import { APP_NAME } from '@/common/constants/app.constants'
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Hr,
-  Html,
-  Link,
-  Preview,
-  Section,
-  Text,
-  Tailwind
-} from '@react-email/components'
 
 interface WelcomeEmailProps {
   userEmail: string
@@ -26,54 +12,104 @@ export default function WelcomeEmail({
   redirectUrl
 }: WelcomeEmailProps) {
   return (
-    <Html>
-      <Head />
-      <Preview>Bienvenido a {APP_NAME} - Tus credenciales de acceso</Preview>
-      <Tailwind>
-        <Body className="bg-gray-100 font-sans">
-          <Container className="mx-auto py-12 px-6 max-w-[600px]">
-            <Section className="bg-white rounded-xl shadow-lg border border-gray-200 p-12">
-              <Heading className="text-3xl font-bold text-gray-900 mb-6 text-center">
-                ¡Bienvenido a {APP_NAME}!
-              </Heading>
-              
-              <Text className="text-gray-700 text-lg mb-8 text-center">
-                Tu cuenta ha sido creada exitosamente. A continuación encontrarás tus credenciales de acceso:
-              </Text>
+    <div style={{ 
+      backgroundColor: '#f3f4f6',
+      fontFamily: 'Arial, sans-serif',
+      padding: '48px 24px'
+    }}>
+      <div style={{
+        backgroundColor: 'white',
+        maxWidth: '600px',
+        margin: '0 auto',
+        borderRadius: '12px',
+        padding: '32px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #e5e7eb'
+      }}>
+        <h1 style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          color: '#111827',
+          marginBottom: '24px'
+        }}>
+          ¡Bienvenido a {APP_NAME}!
+        </h1>
 
-              <Section className="bg-gray-50 rounded-xl p-8 mb-8 border border-gray-100">
-                <Text className="text-gray-800 text-lg mb-4">
-                  <strong>Email:</strong> {userEmail}
-                </Text>
-                <Text className="text-gray-800 text-lg">
-                  <strong>Contraseña:</strong> {password}
-                </Text>
-              </Section>
+        <p style={{
+          fontSize: '16px',
+          color: '#4b5563',
+          textAlign: 'center',
+          marginBottom: '32px'
+        }}>
+          Tu cuenta ha sido creada exitosamente. A continuación encontrarás tus credenciales de acceso:
+        </p>
 
-              <Button 
-                href={redirectUrl}
-                className="bg-black text-white px-8 py-4 rounded-xl font-medium w-full text-center text-lg hover:bg-gray-800 transition-colors"
-              >
-                Iniciar Sesión
-              </Button>
+        <div style={{
+          backgroundColor: '#f9fafb',
+          padding: '24px',
+          borderRadius: '12px',
+          marginBottom: '32px',
+          border: '1px solid #f3f4f6'
+        }}>
+          <p style={{ fontSize: '16px', color: '#111827', marginBottom: '16px' }}>
+            <strong>Email:</strong> {userEmail}
+          </p>
+          <p style={{ fontSize: '16px', color: '#111827', margin: '0' }}>
+            <strong>Contraseña:</strong> {password}
+          </p>
+        </div>
 
-              <Hr className="border-gray-200 my-8" />
+        <a 
+          href={redirectUrl}
+          style={{
+            display: 'block',
+            backgroundColor: '#000000',
+            color: '#ffffff',
+            padding: '16px 24px',
+            textDecoration: 'none',
+            borderRadius: '12px',
+            textAlign: 'center',
+            fontSize: '16px',
+            fontWeight: '500',
+            marginBottom: '32px'
+          }}
+        >
+          Iniciar Sesión
+        </a>
 
-              <Text className="text-gray-600 text-base text-center">
-                También puedes iniciar sesión utilizando tu cuenta de Google haciendo clic en el botón correspondiente en la página de inicio de sesión.
-              </Text>
+        <hr style={{ 
+          border: 'none',
+          borderTop: '1px solid #e5e7eb',
+          margin: '32px 0'
+        }} />
 
-              <Text className="text-gray-500 text-sm text-center mt-8">
-                Si no solicitaste esta cuenta, puedes ignorar este correo.
-              </Text>
-            </Section>
+        <p style={{
+          fontSize: '14px',
+          color: '#6b7280',
+          textAlign: 'center',
+          marginBottom: '24px'
+        }}>
+          También puedes iniciar sesión utilizando tu cuenta de Google haciendo clic en el botón correspondiente en la página de inicio de sesión.
+        </p>
 
-            <Text className="text-gray-400 text-sm text-center mt-6">
-              © {new Date().getFullYear()} {APP_NAME}. Todos los derechos reservados.
-            </Text>
-          </Container>
-        </Body>
-      </Tailwind>
-    </Html>
+        <p style={{
+          fontSize: '12px',
+          color: '#9ca3af',
+          textAlign: 'center'
+        }}>
+          Si no solicitaste esta cuenta, puedes ignorar este correo.
+        </p>
+      </div>
+
+      <p style={{
+        fontSize: '12px',
+        color: '#9ca3af',
+        textAlign: 'center',
+        marginTop: '24px'
+      }}>
+        © {new Date().getFullYear()} {APP_NAME}. Todos los derechos reservados.
+      </p>
+    </div>
   )
 }
