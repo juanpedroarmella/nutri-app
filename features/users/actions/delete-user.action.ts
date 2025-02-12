@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache'
 export async function deleteUser(authId: string) {
   const currentUser = await authService.getCurrentUser()
 
+  console.log('authId', authId)
   if (!currentUser) {
     return { error: 'Usuario no autenticado' }
   }

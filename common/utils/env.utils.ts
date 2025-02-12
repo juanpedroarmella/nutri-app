@@ -8,7 +8,5 @@ export class EnvVariables {
   static nextPublicAppUrl =
     process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   static apiSecretToken = process.env.API_SECRET_TOKEN
-  static emailSender = process.env.EMAIL_SENDER
-  static brevoApiKey = process.env.BREVO_API_KEY
-  static brevoApiUrl = process.env.BREVO_API_URL
+  static resendApiKey = process.env.RESEND_API_KEY
 }

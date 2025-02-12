@@ -1,13 +1,17 @@
 import { APP_NAME } from '@/common/constants/app.constants'
 import {
   Body,
+  Button,
   Container,
   Head,
   Heading,
+  Hr,
   Html,
   Link,
   Preview,
-  Text
+  Section,
+  Text,
+  Tailwind
 } from '@react-email/components'
 
 interface WelcomeEmailProps {
@@ -24,87 +28,52 @@ export default function WelcomeEmail({
   return (
     <Html>
       <Head />
-      <Preview>Bienvenido a {APP_NAME}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Heading style={h1}>Bienvenido a {APP_NAME}</Heading>
-          <Text style={text}>Aquí están tus credenciales de acceso:</Text>
-          <Text style={credentialsContainer}>
-            <strong>Email:</strong> {userEmail}
-            <br />
-            <strong>Contraseña:</strong> {password}
-          </Text>
-          <Text style={text}>
-            También puedes iniciar sesión utilizando tu cuenta de Google
-            haciendo clic en el botón correspondiente en la página de inicio de
-            sesión.
-          </Text>
-          <Link href={redirectUrl} style={button}>
-            Ir a iniciar sesión
-          </Link>
-          <Text style={footer}>
-            Si no solicitaste esta cuenta, puedes ignorar este correo.
-          </Text>
-        </Container>
-      </Body>
+      <Preview>Bienvenido a {APP_NAME} - Tus credenciales de acceso</Preview>
+      <Tailwind>
+        <Body className="bg-gray-100 font-sans">
+          <Container className="mx-auto py-12 px-6 max-w-[600px]">
+            <Section className="bg-white rounded-xl shadow-lg border border-gray-200 p-12">
+              <Heading className="text-3xl font-bold text-gray-900 mb-6 text-center">
+                ¡Bienvenido a {APP_NAME}!
+              </Heading>
+              
+              <Text className="text-gray-700 text-lg mb-8 text-center">
+                Tu cuenta ha sido creada exitosamente. A continuación encontrarás tus credenciales de acceso:
+              </Text>
+
+              <Section className="bg-gray-50 rounded-xl p-8 mb-8 border border-gray-100">
+                <Text className="text-gray-800 text-lg mb-4">
+                  <strong>Email:</strong> {userEmail}
+                </Text>
+                <Text className="text-gray-800 text-lg">
+                  <strong>Contraseña:</strong> {password}
+                </Text>
+              </Section>
+
+              <Button 
+                href={redirectUrl}
+                className="bg-black text-white px-8 py-4 rounded-xl font-medium w-full text-center text-lg hover:bg-gray-800 transition-colors"
+              >
+                Iniciar Sesión
+              </Button>
+
+              <Hr className="border-gray-200 my-8" />
+
+              <Text className="text-gray-600 text-base text-center">
+                También puedes iniciar sesión utilizando tu cuenta de Google haciendo clic en el botón correspondiente en la página de inicio de sesión.
+              </Text>
+
+              <Text className="text-gray-500 text-sm text-center mt-8">
+                Si no solicitaste esta cuenta, puedes ignorar este correo.
+              </Text>
+            </Section>
+
+            <Text className="text-gray-400 text-sm text-center mt-6">
+              © {new Date().getFullYear()} {APP_NAME}. Todos los derechos reservados.
+            </Text>
+          </Container>
+        </Body>
+      </Tailwind>
     </Html>
   )
-}
-
-const main = {
-  backgroundColor: '#ffffff',
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif'
-}
-
-const container = {
-  margin: '0 auto',
-  padding: '20px 0 48px',
-  maxWidth: '560px'
-}
-
-const h1 = {
-  color: '#333',
-  fontSize: '24px',
-  fontWeight: '600',
-  lineHeight: '40px',
-  margin: '0 0 20px'
-}
-
-const text = {
-  color: '#444',
-  fontSize: '16px',
-  lineHeight: '24px',
-  margin: '0 0 16px'
-}
-
-const credentialsContainer = {
-  backgroundColor: '#f4f4f4',
-  padding: '16px',
-  borderRadius: '4px',
-  margin: '24px 0',
-  color: '#444',
-  fontSize: '16px',
-  lineHeight: '24px'
-}
-
-const button = {
-  backgroundColor: '#000',
-  borderRadius: '4px',
-  color: '#fff',
-  display: 'inline-block',
-  fontSize: '16px',
-  fontWeight: '600',
-  lineHeight: '50px',
-  textAlign: 'center' as const,
-  textDecoration: 'none',
-  width: '100%',
-  marginTop: '24px'
-}
-
-const footer = {
-  color: '#898989',
-  fontSize: '14px',
-  lineHeight: '22px',
-  margin: '24px 0 0'
 }
