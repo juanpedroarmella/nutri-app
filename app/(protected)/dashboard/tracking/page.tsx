@@ -2,14 +2,11 @@ import { userService } from '@/features/users/service/user.service'
 import WeightTrackingSection from '@/features/tracking/components/weight-tracking-section.component'
 import { notFound } from 'next/navigation'
 
-interface PageProps {
-  params: Promise<{ userId: string }>
-}
 
-export default async function TrackingPage({ params }: PageProps) {
-  const resolvedParams = await params
 
-  const user = await userService.getUser(resolvedParams.userId)
+export default async function TrackingPage() {
+
+  const user = await userService.getCurrentUser()
 
   if (!user) {
     notFound()

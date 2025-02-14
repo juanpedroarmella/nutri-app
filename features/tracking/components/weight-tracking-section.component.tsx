@@ -37,11 +37,13 @@ async function SuspensedWeightTrackingSection({
         <WeightTrackingChart trackings={trackings} />
       )}
       {isAdmin && <WeightTrackingForm userId={userId} />}
-      <WeightTrackingList
-        trackings={trackings || []}
-        userId={userId}
-        isAdmin={isAdmin}
-      />
+      {isAdmin && (
+        <WeightTrackingList
+          trackings={trackings || []}
+          userId={userId}
+          isAdmin={isAdmin}
+        />
+      )}
     </>
   )
 }

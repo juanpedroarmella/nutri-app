@@ -9,10 +9,12 @@ export const signInAction = async (formData: FormData) => {
 
   const { error } = await authService.signIn(email, password)
 
+  console.log(error)
+
   if (error) {
     return {
       type: 'error',
-      message: error.message
+      message: error.status === 400 ? 'Credenciales incorrectas' : 'Error al iniciar sesión'
     }
   }
 
