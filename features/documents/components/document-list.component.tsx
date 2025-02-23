@@ -4,13 +4,14 @@ import { User } from '@/features/users/types/user.types'
 
 interface Props {
   documents: (Document & { user: User })[]
+  isAdmin: boolean
 }
 
-export default function DocumentList({ documents }: Props) {
+export default function DocumentList({ documents, isAdmin }: Props) {
   return (
     <div className='space-y-4 flex flex-col'>
       {documents.map(document => (
-        <DocumentComponent key={document.id} document={document} />
+        <DocumentComponent key={document.id} document={document} isAdmin={isAdmin} />
       ))}
 
       {documents.length === 0 && (

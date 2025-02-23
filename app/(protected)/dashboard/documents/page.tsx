@@ -9,6 +9,7 @@ import { AuthRoutes } from '@/common/types/routes.types'
 import DocumentList from '@/features/documents/components/document-list.component'
 import { documentService } from '@/features/documents/services/document.service'
 import { userService } from '@/features/users/service/user.service'
+import { UserRole } from '@/features/users/types/user.types'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
@@ -25,11 +26,12 @@ async function SuspensedDocumentsPage() {
   return (
     <>
       <TabsContent value='my-documents'>
-        <DocumentList documents={myDocuments.map(doc => ({ ...doc, user }))} />
+        <DocumentList documents={myDocuments.map(doc => ({ ...doc, user }))} isAdmin={user.role === UserRole.ADMIN} />
       </TabsContent>
       <TabsContent value='public-documents'>
         <DocumentList
           documents={publicDocuments.map(doc => ({ ...doc, user }))}
+          isAdmin={user.role === UserRole.ADMIN}
         />
       </TabsContent>
     </>

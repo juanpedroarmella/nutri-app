@@ -10,7 +10,7 @@ import ClinicalHistoryTab from './tabs/clinical-history-tab.component'
 import DocumentsTab from './tabs/documents-tab.component'
 import TrackingTab from './tabs/tracking-tab.component'
 import UserInfoTab from './tabs/user-info-tab.component'
-
+import { UserRole } from '../types/user.types'
 export default async function UserDetailsTabs({ id }: { id: string }) {
   const user = await userService.getUser(id)
 
@@ -36,7 +36,7 @@ export default async function UserDetailsTabs({ id }: { id: string }) {
         <TrackingTab userId={user.idAuth} />
       </TabsContent>
       <TabsContent value='documents'>
-        <DocumentsTab user={user} />
+        <DocumentsTab user={user} isAdmin={user.role === UserRole.ADMIN} />
       </TabsContent>
     </Tabs>
   )

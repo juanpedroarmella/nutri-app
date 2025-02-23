@@ -13,9 +13,10 @@ import { Plus } from 'lucide-react'
 
 interface DocumentsTabProps {
   user: User
+  isAdmin: boolean
 }
 
-export default async function DocumentsTab({ user }: DocumentsTabProps) {
+export default async function DocumentsTab({ user, isAdmin }: DocumentsTabProps) {
   const documents = await documentService.getDocumentsByUser(user.idAuth)
 
   return (
@@ -34,7 +35,7 @@ export default async function DocumentsTab({ user }: DocumentsTabProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <DocumentList documents={documents.map(doc => ({ ...doc, user }))} />
+        <DocumentList documents={documents.map(doc => ({ ...doc, user }))} isAdmin={isAdmin} />
       </CardContent>
     </Card>
   )

@@ -13,6 +13,9 @@ import { documentService } from '@/features/documents/services/document.service'
 import { userService } from '@/features/users/service/user.service'
 import { FileText, Plus } from 'lucide-react'
 import { Suspense } from 'react'
+import { redirect } from 'next/navigation'
+import { AuthRoutes } from '@/common/types/routes.types'
+import { UserRole } from '@/features/users/types/user.types'
 
 const CreateDocumentSection = async () => {
   const users = await userService.getUsers()
@@ -27,13 +30,19 @@ const CreateDocumentSection = async () => {
   )
 }
 
-const DocumentsSection = async () => {
+const DocumentsSection = async ({ isAdmin }: { isAdmin: boolean }) => {
   const documents = await documentService.getAllDocuments()
 
-  return <DocumentList documents={documents} />
+  return <DocumentList documents={documents} isAdmin={isAdmin} />
 }
 
 export default async function DocumentsPage() {
+  const user = await userService.getCurrentUser()
+
+  if (!user) {
+    return redirect(AuthRoutes.SIGN_IN)
+  }
+
   return (
     <div className='flex-1 w-full flex flex-col gap-6 p-3 sm:p-6 max-w-7xl mx-auto'>
       <Card>
@@ -64,7 +73,7 @@ export default async function DocumentsPage() {
         </CardHeader>
         <CardContent>
           <Suspense fallback={<Skeleton className='h-[500px] w-full' />}>
-            <DocumentsSection />
+            <DocumentsSection isAdmin={user.role === UserRole.ADMIN} />
           </Suspense>
         </CardContent>
       </Card>

@@ -17,9 +17,10 @@ import { downloadDocument } from '../actions/document-download.action'
 
 interface Props {
   document: Document & { user: User }
+  isAdmin:boolean
 }
 
-export default function DocumentComponent({ document: doc }: Props) {
+export default function DocumentComponent({ document: doc, isAdmin }: Props) {
   const [isPending, startTransition] = useTransition()
   const { toast } = useToast()
 
@@ -44,19 +45,19 @@ export default function DocumentComponent({ document: doc }: Props) {
   const handleDownload = async () => {
     try {
       const data = await downloadDocument(doc.id)
-      
+
       // Crear el blob desde los datos base64
       const buffer = Buffer.from(data.buffer, 'base64')
       const blob = new Blob([buffer], { type: data.contentType })
       const url = window.URL.createObjectURL(blob)
-      
+
       // Crear un link temporal para la descarga
       const a = window.document.createElement('a')
       a.href = url
       a.download = data.fileName
       window.document.body.appendChild(a)
       a.click()
-      
+
       // Limpieza
       window.URL.revokeObjectURL(url)
       window.document.body.removeChild(a)
@@ -129,14 +130,16 @@ export default function DocumentComponent({ document: doc }: Props) {
         <Button variant='outline' size='icon' onClick={handleDownload}>
           <Download className='w-4 h-4' />
         </Button>
-        <Button
-          variant='destructive'
-          size='icon'
+        {isAdmin && (
+          <Button
+            variant='destructive'
+            size='icon'
           onClick={handleDelete}
-          disabled={isPending}
+          disabled={isPending || !isAdmin}
         >
-          <Trash2 className='w-4 h-4' />
-        </Button>
+            <Trash2 className='w-4 h-4' />
+          </Button>
+        )}
       </div>
     </div>
   )
