@@ -10,11 +10,11 @@ import {
   SelectValue
 } from '@/common/components/ui/select'
 import { Switch } from '@/common/components/ui/switch'
-import { useToast } from '@/common/hooks/use-toast'
 import { User } from '@/features/users/types/user.types'
-import { Upload } from 'lucide-react'
+import { Upload, Loader2 } from 'lucide-react'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Progress } from '@/common/components/ui/progress'
+import { useDocumentUpload } from '../hooks/use-document-upload'
 
 interface Props {
   users: User[]
@@ -22,55 +22,35 @@ interface Props {
 }
 
 export default function DocumentCreate({ users, onSuccess }: Props) {
-  const { toast } = useToast()
-  const router = useRouter()
   const [isPublic, setIsPublic] = useState(false)
   const [fileName, setFileName] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  
+  const { uploadDocument, isLoading, uploadProgress } = useDocumentUpload({
+    onSuccess
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsLoading(true)
-
-    try {
-      const formData = new FormData(e.currentTarget)
-
-      const response = await fetch('/api/documents', {
-        method: 'POST',
-        body: formData
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        toast({
-          title: 'Éxito',
-          description: 'Documento subido correctamente'
-        })
-        router.refresh()
-
-        onSuccess?.()
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: result.error || 'Error al subir el documento'
-        })
-      }
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Error al subir el documento'
-      })
-    } finally {
-      setIsLoading(false)
-    }
+    
+    if (!selectedFile) return
+    
+    const formElement = e.currentTarget as HTMLFormElement
+    const userIdElement = formElement.elements.namedItem('userId') as HTMLSelectElement
+    const userId = userIdElement?.value
+    
+    await uploadDocument({
+      file: selectedFile,
+      name: fileName || selectedFile.name,
+      isPublic,
+      userId: isPublic ? undefined : userId
+    })
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      setSelectedFile(file)
       const name = file.name.split('.').slice(0, -1).join('.')
       setFileName(name)
     }
@@ -86,6 +66,7 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
           type='file'
           required
           onChange={handleFileChange}
+          disabled={isLoading}
         />
       </div>
 
@@ -97,6 +78,7 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
           required
           value={fileName}
           onChange={e => setFileName(e.target.value)}
+          disabled={isLoading}
         />
       </div>
 
@@ -106,6 +88,7 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
           name='isPublic'
           checked={isPublic}
           onCheckedChange={setIsPublic}
+          disabled={isLoading}
         />
         <Label htmlFor='isPublic'>Documento público</Label>
       </div>
@@ -117,6 +100,7 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
             name='userId'
             required
             defaultValue={users.length === 1 ? users[0].idAuth : undefined}
+            disabled={isLoading}
           >
             <SelectTrigger>
               <SelectValue placeholder='Selecciona un usuario' />
@@ -132,9 +116,20 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
         </div>
       )}
 
+      {uploadProgress > 0 && (
+        <div className='space-y-2'>
+          <Label>Progreso de carga</Label>
+          <Progress value={uploadProgress} className='h-2' />
+          <p className='text-xs text-center'>{uploadProgress}%</p>
+        </div>
+      )}
+
       <Button type='submit' disabled={isLoading}>
         {isLoading ? (
-          'Subiendo...'
+          <>
+            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+            Subiendo...
+          </>
         ) : (
           <>
             <Upload className='mr-2 h-4 w-4' />
