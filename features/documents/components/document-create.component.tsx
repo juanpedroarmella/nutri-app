@@ -13,8 +13,8 @@ import { Switch } from '@/common/components/ui/switch'
 import { useToast } from '@/common/hooks/use-toast'
 import { User } from '@/features/users/types/user.types'
 import { Upload } from 'lucide-react'
-import { useState, useTransition } from 'react'
-import { uploadDocument } from '../actions/document-create.action'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   users: User[]
@@ -23,27 +23,49 @@ interface Props {
 
 export default function DocumentCreate({ users, onSuccess }: Props) {
   const { toast } = useToast()
+  const router = useRouter()
   const [isPublic, setIsPublic] = useState(false)
   const [fileName, setFileName] = useState('')
-  const [isPending, startTransition] = useTransition()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (formData: FormData) => {
-    startTransition(async () => {
-      const result = await uploadDocument(formData)
-      if (result.success) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const formData = new FormData(e.currentTarget)
+
+      const response = await fetch('/api/documents', {
+        method: 'POST',
+        body: formData
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
         toast({
           title: 'Éxito',
           description: 'Documento subido correctamente'
         })
+        router.refresh()
+
         onSuccess?.()
-      } else if (result.error) {
+      } else {
         toast({
           variant: 'destructive',
           title: 'Error',
-          description: result.error
+          description: result.error || 'Error al subir el documento'
         })
       }
-    })
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Error al subir el documento'
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +77,7 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
   }
 
   return (
-    <form action={handleSubmit} className='space-y-4'>
+    <form onSubmit={handleSubmit} className='space-y-4'>
       <div className='space-y-2'>
         <Label htmlFor='file'>Archivo</Label>
         <Input
@@ -110,8 +132,8 @@ export default function DocumentCreate({ users, onSuccess }: Props) {
         </div>
       )}
 
-      <Button type='submit' disabled={isPending}>
-        {isPending ? (
+      <Button type='submit' disabled={isLoading}>
+        {isLoading ? (
           'Subiendo...'
         ) : (
           <>

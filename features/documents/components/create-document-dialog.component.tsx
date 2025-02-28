@@ -1,10 +1,5 @@
 'use client'
 
-import { Button } from "@/common/components/ui/button"
-import { User } from "@/features/users/types/user.types"
-import { useState } from "react"
-import DocumentCreate from "./document-create.component"
-import { X } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -12,6 +7,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/common/components/ui/dialog"
+import { User } from "@/features/users/types/user.types"
+import { useState } from "react"
+import DocumentCreate from "./document-create.component"
 
 interface Props {
   users: User[]
