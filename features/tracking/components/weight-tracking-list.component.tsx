@@ -55,7 +55,7 @@ export default function WeightTrackingList({
         <TableRow>
           <TableHead>Fecha</TableHead>
           <TableHead>Peso (kg)</TableHead>
-          <TableHead>Notas</TableHead>
+          {isAdmin && <TableHead>Notas</TableHead>}
           {isAdmin && <TableHead className='w-[100px]'>Acciones</TableHead>}
         </TableRow>
       </TableHeader>
@@ -73,7 +73,7 @@ export default function WeightTrackingList({
               {new Date(tracking.date).toLocaleDateString()}
             </TableCell>
             <TableCell>{tracking.weight}</TableCell>
-            <TableCell>{tracking.notes || '-'}</TableCell>
+            {isAdmin && <TableCell>{tracking.notes || '-'}</TableCell>}
             {isAdmin && (
               <TableCell>
                 <Button

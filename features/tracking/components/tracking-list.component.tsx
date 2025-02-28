@@ -68,7 +68,7 @@ export default function TrackingList({
         <TableRow>
           <TableHead>Fecha</TableHead>
           <TableHead>{getValueLabel()}</TableHead>
-          <TableHead>Notas</TableHead>
+          {isAdmin && <TableHead>Notas</TableHead>}
           {isAdmin && <TableHead className='w-[100px]'>Acciones</TableHead>}
         </TableRow>
       </TableHeader>
@@ -86,7 +86,7 @@ export default function TrackingList({
               {new Date(tracking.date).toLocaleDateString()}
             </TableCell>
             <TableCell>{tracking.value}</TableCell>
-            <TableCell>{tracking.notes || '-'}</TableCell>
+            {isAdmin && <TableCell>{tracking.notes || '-'}</TableCell>}
             {isAdmin && (
               <TableCell>
                 <Button
