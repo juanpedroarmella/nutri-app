@@ -6,13 +6,16 @@ import {
 } from '@/common/components/ui/tabs'
 import { notFound } from 'next/navigation'
 import { userService } from '../service/user.service'
+import { UserRole } from '../types/user.types'
 import ClinicalHistoryTab from './tabs/clinical-history-tab.component'
 import DocumentsTab from './tabs/documents-tab.component'
 import TrackingTab from './tabs/tracking-tab.component'
 import UserInfoTab from './tabs/user-info-tab.component'
-import { UserRole } from '../types/user.types'
+
 export default async function UserDetailsTabs({ id }: { id: string }) {
   const user = await userService.getUser(id)
+
+  const currentUser = await userService.getCurrentUser()
 
   if (!user) {
     notFound()
@@ -33,10 +36,16 @@ export default async function UserDetailsTabs({ id }: { id: string }) {
         <ClinicalHistoryTab user={user} />
       </TabsContent>
       <TabsContent value='tracking'>
-        <TrackingTab userId={user.idAuth} />
+        <TrackingTab
+          userId={user.idAuth}
+          isAdmin={currentUser?.role === UserRole.ADMIN}
+        />
       </TabsContent>
       <TabsContent value='documents'>
-        <DocumentsTab user={user} isAdmin={user.role === UserRole.ADMIN} />
+        <DocumentsTab
+          user={user}
+          isAdmin={currentUser?.role === UserRole.ADMIN}
+        />
       </TabsContent>
     </Tabs>
   )
