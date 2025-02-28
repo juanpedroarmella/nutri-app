@@ -28,10 +28,17 @@ export class TrackingService {
     }
 
     if (!isAdmin && currentUser.id !== userId) {
-      return { error: 'No tienes permisos para ver este seguimiento', data: null }
+      return {
+        error: 'No tienes permisos para ver este seguimiento',
+        data: null
+      }
     }
 
-    const { data, error } = await this.repository.getTrackingByUserId(userId, type)
+    const { data, error } = await this.repository.getTrackingByUserId(
+      userId,
+      type,
+      isAdmin
+    )
 
     if (error) return { error: error.message, data: null }
 
@@ -73,4 +80,4 @@ export class TrackingService {
   }
 }
 
-export const trackingService = TrackingService.getInstance() 
+export const trackingService = TrackingService.getInstance()
