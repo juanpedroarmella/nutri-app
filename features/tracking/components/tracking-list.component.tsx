@@ -83,7 +83,12 @@ export default function TrackingList({
         {trackings.map(tracking => (
           <TableRow key={tracking.id}>
             <TableCell>
-              {new Date(tracking.date).toLocaleDateString()}
+              {new Date(tracking.date).toLocaleDateString('es-AR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                timeZone: 'UTC'
+              })}
             </TableCell>
             <TableCell>{tracking.value}</TableCell>
             {isAdmin && <TableCell>{tracking.notes || '-'}</TableCell>}
@@ -104,4 +109,4 @@ export default function TrackingList({
       </TableBody>
     </Table>
   )
-} 
+}

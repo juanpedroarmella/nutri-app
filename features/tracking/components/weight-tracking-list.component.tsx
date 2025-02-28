@@ -70,7 +70,12 @@ export default function WeightTrackingList({
         {trackings.map(tracking => (
           <TableRow key={tracking.id}>
             <TableCell>
-              {new Date(tracking.date).toLocaleDateString()}
+              {new Date(tracking.date).toLocaleDateString('es-AR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                timeZone: 'UTC'
+              })}
             </TableCell>
             <TableCell>{tracking.weight}</TableCell>
             {isAdmin && <TableCell>{tracking.notes || '-'}</TableCell>}
@@ -91,4 +96,4 @@ export default function WeightTrackingList({
       </TableBody>
     </Table>
   )
-} 
+}
