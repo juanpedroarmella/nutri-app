@@ -2,14 +2,12 @@ import { APP_NAME } from '@/common/constants/app.constants'
 import WelcomeEmail from '@/features/email/components/welcome-user.email'
 import { Resend } from 'resend'
 import { EnvVariables } from '@/common/utils/env.utils'
-import { createClient } from '@/common/utils/supabase/server'
-import { authService } from '@/features/auth/services/auth.service'
+import { createClient as createClientSupabase } from '@supabase/supabase-js'
 
 const resend = new Resend(EnvVariables.resendApiKey)
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
     const authHeader = request.headers.get('Authorization')
     
     if (!authHeader?.startsWith('Bearer ')) {
@@ -17,15 +15,32 @@ export async function POST(request: Request) {
     }
 
     const token = authHeader.split(' ')[1]
-    const { data: { user }, error: userError } = await supabase.auth.getUser(token)
+    
+    const supabase = createClientSupabase(
+      EnvVariables.supaBaseUrl!,
+      EnvVariables.supaBaseAnonKey!,
+      {
+        global: {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      }
+    )
+
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
       return Response.json({ error: 'No autorizado' }, { status: 401 })
     }
 
-    const isAdmin = await authService.isCurrentUserAdmin()
+    const { data: userData, error: userDataError } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id_auth', user.id)
+      .single()
 
-    if (!isAdmin) {
+    if (userDataError || !userData || userData.role !== 'admin') {
       return Response.json({ error: 'No tienes permisos para enviar correos' }, { status: 403 })
     }
 
