@@ -2,20 +2,35 @@ import { APP_NAME } from '@/common/constants/app.constants'
 import WelcomeEmail from '@/features/email/components/welcome-user.email'
 import { Resend } from 'resend'
 import { EnvVariables } from '@/common/utils/env.utils'
+import { createClient } from '@/common/utils/supabase/server'
 import { authService } from '@/features/auth/services/auth.service'
 
 const resend = new Resend(EnvVariables.resendApiKey)
 
 export async function POST(request: Request) {
-  const isAdmin = await authService.isCurrentUserAdmin()
-
-  if (!isAdmin) {
-    return Response.json({ error: 'No tienes permisos para enviar correos' }, { status: 403 })
-  }
-
-  const { userEmail, password, redirectUrl } = await request.json()
-
   try {
+    const supabase = await createClient()
+    const authHeader = request.headers.get('Authorization')
+    
+    if (!authHeader?.startsWith('Bearer ')) {
+      return Response.json({ error: 'No autorizado' }, { status: 401 })
+    }
+
+    const token = authHeader.split(' ')[1]
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token)
+
+    if (userError || !user) {
+      return Response.json({ error: 'No autorizado' }, { status: 401 })
+    }
+
+    const isAdmin = await authService.isCurrentUserAdmin()
+
+    if (!isAdmin) {
+      return Response.json({ error: 'No tienes permisos para enviar correos' }, { status: 403 })
+    }
+
+    const { userEmail, password, redirectUrl } = await request.json()
+
     const { data, error } = await resend.emails.send({
       from: 'Lic. Romina Lasca <onboarding@rominalasca.com>',
       to: [userEmail],
