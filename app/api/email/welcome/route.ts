@@ -7,7 +7,15 @@ const resend = new Resend(EnvVariables.resendApiKey)
 
 export async function POST(request: Request) {
   try {
-    const { userEmail, password, redirectUrl } = await request.json()
+    const { userEmail, password, redirectUrl, secretToken } = await request.json()
+
+    // Validate secret token
+    if (!secretToken || secretToken !== EnvVariables.emailSecretToken) {
+      return Response.json(
+        { error: 'Unauthorized: Invalid secret token' },
+        { status: 401 }
+      )
+    }
 
     const { data, error } = await resend.emails.send({
       from: 'Lic. Romina Lasca <onboarding@rominalasca.com>',

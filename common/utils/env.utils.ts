@@ -9,4 +9,5 @@ export class EnvVariables {
     process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   static apiSecretToken = process.env.API_SECRET_TOKEN
   static resendApiKey = process.env.RESEND_API_KEY
+  static emailSecretToken = process.env.EMAIL_SECRET_TOKEN
 }

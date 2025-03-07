@@ -15,7 +15,8 @@ export async function sendWelcomeEmail(email: string, password: string) {
       body: JSON.stringify({
         userEmail: email,
         password,
-        redirectUrl: `${baseUrl}${AuthRoutes.SIGN_IN}`
+        redirectUrl: `${baseUrl}${AuthRoutes.SIGN_IN}`,
+        secretToken: EnvVariables.emailSecretToken
       })
     })
 
