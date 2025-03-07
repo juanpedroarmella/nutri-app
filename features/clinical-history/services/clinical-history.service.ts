@@ -92,7 +92,8 @@ export class ClinicalHistoryService {
       seasonings_consumption: data.seasoningsConsumption as unknown as string,
       observations: data.observations,
       possible_treatment: data.possibleTreatment,
-      food_routine: data.foodRoutine
+      food_routine: data.foodRoutine,
+      supplements: data.supplements as unknown as string
     }
   }
 }
