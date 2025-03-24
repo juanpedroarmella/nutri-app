@@ -1,4 +1,4 @@
-import { createClient } from '@/common/utils/supabase/server'
+import { createClient, createClientAdmin } from '@/common/utils/supabase/server'
 import { UserEntity } from '../entity/user.entity'
 
 export class UserRepository {
@@ -9,9 +9,17 @@ export class UserRepository {
   }
 
   async editUser(userId: string, data: Partial<UserEntity>) {
-    const supabase = await createClient()
+    const supabase = await createClientAdmin()
 
-    return await supabase.from('users').update(data).eq('id', userId)
+    console.log(userId)
+
+    console.log(data)
+
+    const res = await supabase.from('users').update(data).eq('id', userId)
+
+    console.log(res)
+
+    return res
   }
 
   async getUserByAuthId(userId: string) {

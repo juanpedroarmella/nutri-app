@@ -1,102 +1,94 @@
 'use client'
 
 import { Button } from '@/common/components/ui/button'
-import { Trash2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
-import { useToast } from '@/common/hooks/use-toast'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogDescription
+  DialogTrigger
 } from '@/common/components/ui/dialog'
+import { useToast } from '@/common/hooks/use-toast'
+import { Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { deleteUser } from '../../actions/delete-user.action'
-import { AdminRoutes } from '@/common/types/routes.types'
 import { User } from '../../types/user.types'
+
+interface DeleteUserDialogProps {
+  userId: string
+  currentUser: User | null
+  disabled?: boolean
+  children?: React.ReactNode
+}
 
 export default function DeleteUserDialog({
   userId,
   currentUser,
-  disabled
-}: {
-  userId: string
-  currentUser: User | null
-  disabled: boolean
-}) {
-  const [isPending, startTransition] = useTransition()
+  disabled,
+  children
+}: DeleteUserDialogProps) {
   const [open, setOpen] = useState(false)
   const { toast } = useToast()
-  const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   const handleDelete = async () => {
-    if (userId === currentUser?.id) {
+    setLoading(true)
+
+    const result = await deleteUser(userId)
+
+    if (result.error) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'No puedes borrarte a ti mismo'
+        description: result.error
       })
-      setOpen(false)
+      setLoading(false)
       return
     }
 
-    startTransition(async () => {
-      try {
-        const result = await deleteUser(userId)
-
-        if (result.error) {
-          toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: result.error
-          })
-        } else {
-          toast({
-            title: 'Usuario eliminado',
-            description: 'El usuario ha sido eliminado exitosamente'
-          })
-          router.push(AdminRoutes.HOME)
-        }
-      } catch (error) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: 'Ocurrió un error al eliminar el usuario'
-        })
-      } finally {
-        setOpen(false)
-      }
+    toast({
+      title: 'Éxito',
+      description: 'Usuario eliminado correctamente'
     })
+
+    setOpen(false)
+    setLoading(false)
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant='destructive' size='icon' disabled={disabled}>
-          <Trash2 className='h-4 w-4' />
-        </Button>
+        {children || (
+          <Button
+            variant="ghost"
+            size="icon"
+            disabled={disabled}
+          >
+            <Trash2 className="h-4 w-4" color='' />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Eliminar Usuario</DialogTitle>
           <DialogDescription>
-            ¿Estás seguro de que quieres eliminar este usuario? Esta acción no
-            se puede deshacer.
+            ¿Estás seguro de que deseas eliminar este usuario? Esta acción no se
+            puede deshacer.
           </DialogDescription>
         </DialogHeader>
+
         <DialogFooter>
-          <Button variant='outline' onClick={() => setOpen(false)}>
+          <Button variant="outline" onClick={() => setOpen(false)}>
             Cancelar
           </Button>
           <Button
-            variant='destructive'
+            variant="destructive"
             onClick={handleDelete}
-            disabled={isPending}
+            disabled={loading}
           >
-            {isPending ? 'Eliminando...' : 'Eliminar'}
+            {loading ? 'Eliminando...' : 'Eliminar'}
           </Button>
         </DialogFooter>
       </DialogContent>

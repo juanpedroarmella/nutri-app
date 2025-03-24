@@ -1,47 +1,23 @@
-import { Card, CardContent, CardHeader } from '@/common/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/common/components/ui/table'
-import { Suspense } from 'react'
 import { userService } from '../service/user.service'
-import UserRow from './user-row.component'
 import { TableSkeleton } from '@/common/components/table-skeleton'
+import { Suspense } from 'react'
+import { UsersTable } from './users-table'
+
 async function UserTable() {
   const users = await userService.getUsers()
   const currentUser = await userService.getCurrentUser()
 
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Nombre</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Rol</TableHead>
-          <TableHead>Teléfono</TableHead>
-          <TableHead className='text-right'>Acciones</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {users?.map(user => (
-          <UserRow key={user.id} user={user} currentUser={currentUser} />
-        ))}
-      </TableBody>
-    </Table>
-  )
+  return <UsersTable data={users} currentUser={currentUser} />
 }
 
 export default function ListUserComponent() {
   return (
-    <>
-      <h2 className='text-xl font-semibold mb-2'>Usuarios del sistema</h2>
+    <div className="flex flex-col gap-4">
+      <h2 className='text-xl font-semibold'>Usuarios del sistema</h2>
 
       <Suspense fallback={<TableSkeleton columns={5} rows={5} />}>
         <UserTable />
       </Suspense>
-    </>
+    </div>
   )
 }
