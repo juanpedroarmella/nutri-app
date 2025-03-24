@@ -18,7 +18,12 @@ interface WeightTrackingChartProps {
 
 export default function WeightTrackingChart({ trackings }: WeightTrackingChartProps) {
   const data = trackings.map(tracking => ({
-    date: new Date(tracking.date).toLocaleDateString(),
+    date: new Date(tracking.date).toLocaleDateString('es-AR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: 'UTC'
+    }),
     weight: tracking.weight
   }))
 

@@ -19,7 +19,12 @@ interface TrackingChartProps {
 
 export default function TrackingChart({ trackings, type }: TrackingChartProps) {
   const data = trackings.map(tracking => ({
-    date: new Date(tracking.date).toLocaleDateString(),
+    date: new Date(tracking.date).toLocaleDateString('es-AR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: 'UTC'
+    }),
     value: tracking.value
   }))
 
