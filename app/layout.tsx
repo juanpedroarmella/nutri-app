@@ -75,7 +75,7 @@ export default function RootLayout({
           >
             <div className='min-h-screen flex flex-col'>
               <MainNav />
-              <main className='flex-1 flex items-start justify-center mt-[60px]'>
+              <main className='flex-1 flex items-start justify-center mt-[80px]'>
                 <div className='w-full max-w-7xl mx-auto sm:px-4'>
                   {children}
                 </div>
