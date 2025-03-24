@@ -57,7 +57,7 @@ export default async function AuthButton() {
         <p className='text-sm text-muted-foreground'>
           ¡Hola {userData?.firstName}!
         </p>
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button variant='default' className='relative h-8 w-8 rounded-full'>
               <Avatar>
