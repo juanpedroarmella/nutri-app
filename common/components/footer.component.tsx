@@ -38,7 +38,7 @@ export function Footer() {
           <Phone className='w-4 h-4' />
         </a>
         <a
-          href='https://instagram.com/nutricion.rominalasca'
+          href='https://www.instagram.com/lic.rominalasca'
           target='_blank'
           rel='noreferrer'
           className='hover:text-primary transition-colors px-4'
