@@ -18,32 +18,32 @@ export async function middleware(request: NextRequest) {
   } = await refreshSession(request, response)
   const currentPath = request.nextUrl.pathname
 
-  // 2. If user is authenticated and trying to access auth pages, redirect to appropriate route
-  if (user && (currentPath === AuthRoutes.SIGN_IN || currentPath === '/')) {
-    const isAdmin = await authService.isCurrentUserAdmin()
-    return NextResponse.redirect(
-      new URL(
-        isAdmin ? ProtectedRoutes.ADMIN : ProtectedRoutes.DASHBOARD,
-        request.url
-      )
-    )
-  }
-
-  // 3. Check if user is trying to access protected routes
+  // 2. Check if user is trying to access protected routes
   const isProtectedRoute = Object.values(ProtectedRoutes).some(route =>
     currentPath.startsWith(route)
   )
 
-  // 4. If no user and trying to access protected route, redirect to sign in
+  // 3. If no user and trying to access protected route, redirect to sign in
   if (isProtectedRoute && (!user || error)) {
     return NextResponse.redirect(new URL(AuthRoutes.SIGN_IN, request.url))
   }
 
-  // 5. If user exists, handle role-based access
+  // 4. If user exists, handle role-based access and auth pages
   if (user) {
+    // Only check admin status once
     const isAdmin = await authService.isCurrentUserAdmin()
     const isAdminRoute = currentPath.startsWith(ProtectedRoutes.ADMIN)
     const isDashboardRoute = currentPath.startsWith(ProtectedRoutes.DASHBOARD)
+
+    // Handle auth pages redirects
+    if (currentPath === AuthRoutes.SIGN_IN || currentPath === '/') {
+      return NextResponse.redirect(
+        new URL(
+          isAdmin ? ProtectedRoutes.ADMIN : ProtectedRoutes.DASHBOARD,
+          request.url
+        )
+      )
+    }
 
     // Admin trying to access dashboard -> redirect to admin
     if (isAdmin && isDashboardRoute) {

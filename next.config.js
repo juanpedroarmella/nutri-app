@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['sharp', 'canvas']
-  }
+  serverExternalPackages: ['sharp', 'canvas']
 }
 
 module.exports = nextConfig
