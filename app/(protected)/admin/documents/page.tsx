@@ -46,7 +46,7 @@ export default async function DocumentsPage() {
   return (
     <div className='flex-1 w-full flex flex-col gap-6 p-3 sm:p-6 max-w-7xl mx-auto'>
       <Card>
-        <CardHeader>
+        <CardHeader className='sm:px-6 px-3'>
           <div className='flex items-center justify-between flex-wrap gap-4'>
             <div className='flex items-center space-x-4'>
               <div className='p-2 bg-primary/10 rounded-lg'>
@@ -71,7 +71,7 @@ export default async function DocumentsPage() {
             </Suspense>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className='sm:px-6 px-3'>
           <Suspense fallback={<Skeleton className='h-[500px] w-full' />}>
             <DocumentsSection isAdmin={user.role === UserRole.ADMIN} />
           </Suspense>
