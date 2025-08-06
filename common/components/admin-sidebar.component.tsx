@@ -4,7 +4,7 @@ import { cn } from '@/core/lib/utils'
 import { AdminRoutes } from '@/common/types/routes.types'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { FileText, Users, Calendar } from 'lucide-react'
+import { FileText, Users, Calendar, ClipboardList } from 'lucide-react'
 import { Button } from '@/common/components/ui/button'
 import { ScrollArea } from '@/common/components/ui/scroll-area'
 import { Separator } from '@/common/components/ui/separator'
@@ -19,6 +19,11 @@ const menuItems = [
     title: 'Turnos',
     href: AdminRoutes.APPOINTMENTS,
     icon: Calendar
+  },
+  {
+    title: 'Controles',
+    href: AdminRoutes.CONTROLS,
+    icon: ClipboardList
   },
   {
     title: 'Documentos',

@@ -22,7 +22,8 @@ export enum AdminRoutes {
   HOME = '/admin',
   USERS = '/admin/users',
   DOCUMENTS = '/admin/documents',
-  APPOINTMENTS = '/admin/appointments'
+  APPOINTMENTS = '/admin/appointments',
+  CONTROLS = '/admin/controls'
 }
 
 export enum ApiRoutes {
