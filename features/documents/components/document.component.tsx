@@ -44,6 +44,11 @@ export default function DocumentComponent({ document: doc, isAdmin }: Props) {
     })
   }
 
+  // Detect if user is on mobile device
+  const isMobile = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  }
+
   const handleDownload = async () => {
     startTransition(async () => {
       setDownloadProgress(0)
@@ -57,6 +62,18 @@ export default function DocumentComponent({ document: doc, isAdmin }: Props) {
 
         const { signedUrl, fileName, contentType } = result;
 
+        // For mobile devices, open AWS URL directly to trigger system download notification
+        if (isMobile()) {
+          setDownloadProgress(100);
+          window.open(signedUrl, '_blank');
+          toast({
+            title: 'Descarga iniciada',
+            description: `${fileName} se está descargando...`
+          });
+          return;
+        }
+
+        // Desktop implementation (existing logic)
         const response = await fetch(signedUrl);
 
         if (!response.ok) {
