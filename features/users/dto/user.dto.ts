@@ -17,7 +17,8 @@ export class UserDto {
       return new UserDto(user, authD).getUser()
     })
 
-    return users.filter(user => user !== null) as User[]
+    const filteredUsers = users.filter(user => user !== null) as User[]
+    return filteredUsers
   }
 
   getUser(): User {

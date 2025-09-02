@@ -23,7 +23,37 @@ export class AuthRepository {
   async getUsers() {
     const supabaseAdmin = await AuthRepository.getAdminClient()
 
-    return await supabaseAdmin.auth.admin.listUsers()
+    // Obtener TODOS los usuarios con paginación
+    let allUsers: any[] = []
+    let page = 1
+    let hasMore = true
+    
+    while (hasMore) {
+      const result = await supabaseAdmin.auth.admin.listUsers({
+        page: page,
+        perPage: 1000 // Máximo por página
+      })
+      
+      if (result.error) {
+        console.error('Error fetching page', page, ':', result.error.message)
+        return result
+      }
+      
+      if (result.data?.users) {
+        allUsers = allUsers.concat(result.data.users)
+        
+        // Si obtuvimos menos del máximo, ya no hay más páginas
+        hasMore = result.data.users.length === 1000
+        page++
+      } else {
+        hasMore = false
+      }
+    }
+    
+    return {
+      data: { users: allUsers },
+      error: null
+    }
   }
 
   async getSession() {

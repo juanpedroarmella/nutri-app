@@ -38,6 +38,26 @@ export class UserService {
     return usersDto
   }
 
+  async getUsersPaginated(page: number, limit: number, search?: string) {
+    const usersAuth = await this.authService.getUsers()
+    const usersResult = await this.userRepository.getUsersPaginated(page, limit, search)
+
+    if (usersResult.error || usersAuth.error) {
+      throw new Error('No se pudieron obtener los usuarios')
+    }
+
+    if (!usersResult.data || !usersAuth.data) {
+      return { users: [] as User[], total: 0 }
+    }
+
+    const usersDto = UserDto.getUsers(usersResult.data, usersAuth.data)
+
+    return {
+      users: usersDto,
+      total: usersResult.count || 0
+    }
+  }
+
   async getCurrentUser() {
     const userAuth = await this.authService.getCurrentUser()
 
