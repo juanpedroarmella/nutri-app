@@ -207,7 +207,9 @@ export function UsersTable({ data, currentUser }: DataTableProps) {
       (event.target as HTMLElement).closest('button') ||
       (event.target as HTMLElement).closest('[role="dialog"]')
     ) return
-    router.push(`${AdminRoutes.USERS}/${userId}`)
+    
+    event.preventDefault()
+    window.open(`${AdminRoutes.USERS}/${userId}`, "_blank", "noopener,noreferrer")
   }
 
   return (
