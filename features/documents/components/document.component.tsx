@@ -49,7 +49,10 @@ export default function DocumentComponent({ document: doc, isAdmin }: Props) {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   }
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
+    // iOS Safari blocks window.open() after await — open a tab synchronously on tap, then navigate it.
+    const mobileTab = isMobile() ? window.open('about:blank', '_blank') : null
+
     startTransition(async () => {
       setDownloadProgress(0)
       let objectUrl: string | null = null; // Keep track of object URL for cleanup
@@ -62,10 +65,14 @@ export default function DocumentComponent({ document: doc, isAdmin }: Props) {
 
         const { signedUrl, fileName, contentType } = result;
 
-        // For mobile devices, open AWS URL directly to trigger system download notification
+        // For mobile devices, navigate to the signed URL (popup opened above preserves user gesture)
         if (isMobile()) {
           setDownloadProgress(100);
-          window.open(signedUrl, '_blank');
+          if (mobileTab && !mobileTab.closed) {
+            mobileTab.location.href = signedUrl
+          } else {
+            window.location.assign(signedUrl)
+          }
           toast({
             title: 'Descarga iniciada',
             description: `${fileName} se está descargando...`
@@ -124,6 +131,9 @@ export default function DocumentComponent({ document: doc, isAdmin }: Props) {
         })
 
       } catch (error) {
+        if (mobileTab && !mobileTab.closed) {
+          mobileTab.close()
+        }
         console.error('Error al descargar el documento:', error)
         toast({
           variant: 'destructive',

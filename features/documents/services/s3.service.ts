@@ -49,10 +49,19 @@ export class S3Service {
     await this.client.send(command)
   }
 
-  async getSignedUrl(key: string): Promise<string> {
+  async getSignedUrl(
+    key: string,
+    options?: { downloadFileName?: string }
+  ): Promise<string> {
     const command = new GetObjectCommand({
       Bucket: this.bucket,
-      Key: key
+      Key: key,
+      ...(options?.downloadFileName
+        ? {
+            // Helps mobile Safari offer “download” / Files instead of inline-only behavior
+            ResponseContentDisposition: `attachment; filename*=UTF-8''${encodeURIComponent(options.downloadFileName)}`
+          }
+        : {})
     })
 
     return await getSignedUrl(this.client, command, { expiresIn: 3600 })

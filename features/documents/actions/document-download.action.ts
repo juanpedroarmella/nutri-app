@@ -26,7 +26,9 @@ export async function downloadDocument(id: string) {
     }
 
     // Obtener la URL firmada para descargar el archivo desde S3
-    const signedUrl = await s3Service.getSignedUrl(document.s3_key)
+    const signedUrl = await s3Service.getSignedUrl(document.s3_key, {
+      downloadFileName: document.name
+    })
 
     // Devolver la URL firmada, el nombre del archivo y el tipo de contenido
     return {
