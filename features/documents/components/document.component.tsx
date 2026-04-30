@@ -12,7 +12,6 @@ import { User } from '@/features/users/types/user.types'
 import { Download, FileText, Loader2, Trash2, User as UserIcon } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { deleteDocument } from '../actions/document-delete.action'
-import { downloadDocument } from '../actions/document-download.action'
 import { Document } from '../types/document.types'
 
 interface Props {
@@ -44,96 +43,80 @@ export default function DocumentComponent({ document: doc, isAdmin }: Props) {
     })
   }
 
-  // Detect if user is on mobile device
   const isMobile = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   }
 
+  const downloadUrl = `/api/documents/${doc.id}/download`
+
   const handleDownload = () => {
-    // iOS Safari blocks window.open() after await — open a tab synchronously on tap, then navigate it.
-    const mobileTab = isMobile() ? window.open('about:blank', '_blank') : null
+    if (isMobile()) {
+      // iOS Safari ignores fetch+blob downloads and blocks window.open after await.
+      // A same-tab anchor click within the user gesture lets the server's
+      // Content-Disposition: attachment trigger a native download without exposing the S3 URL.
+      const a = window.document.createElement('a')
+      a.href = downloadUrl
+      a.rel = 'noopener'
+      window.document.body.appendChild(a)
+      a.click()
+      a.remove()
+      return
+    }
 
     startTransition(async () => {
       setDownloadProgress(0)
-      let objectUrl: string | null = null; // Keep track of object URL for cleanup
+      let objectUrl: string | null = null
       try {
-        const result = await downloadDocument(doc.id)
-
-        if ('error' in result) {
-          throw new Error(result.error);
-        }
-
-        const { signedUrl, fileName, contentType } = result;
-
-        // For mobile devices, navigate to the signed URL (popup opened above preserves user gesture)
-        if (isMobile()) {
-          setDownloadProgress(100);
-          if (mobileTab && !mobileTab.closed) {
-            mobileTab.location.href = signedUrl
-          } else {
-            window.location.assign(signedUrl)
-          }
-          toast({
-            title: 'Descarga iniciada',
-            description: `${fileName} se está descargando...`
-          });
-          return;
-        }
-
-        // Desktop implementation (existing logic)
-        const response = await fetch(signedUrl);
+        const response = await fetch(downloadUrl)
 
         if (!response.ok) {
-          throw new Error(`Error en la descarga: ${response.statusText}`);
+          const message = await response
+            .json()
+            .then((b) => b?.error)
+            .catch(() => null)
+          throw new Error(message ?? `Error en la descarga: ${response.statusText}`)
         }
 
-        const contentLength = response.headers.get('Content-Length');
-        const totalSize = contentLength ? parseInt(contentLength, 10) : 0;
-        let loadedSize = 0;
+        const contentLength = response.headers.get('Content-Length')
+        const totalSize = contentLength ? parseInt(contentLength, 10) : 0
+        let loadedSize = 0
 
         if (!response.body) {
-           throw new Error('No se pudo obtener el cuerpo de la respuesta para la descarga.');
+          throw new Error('No se pudo obtener el cuerpo de la respuesta para la descarga.')
         }
 
-        const reader = response.body.getReader();
-        const chunks: Uint8Array[] = [];
-        
+        const reader = response.body.getReader()
+        const chunks: Uint8Array[] = []
+
         while (true) {
-          const { done, value } = await reader.read();
+          const { done, value } = await reader.read()
           if (done) {
-            break;
+            break
           }
-          chunks.push(value);
-          loadedSize += value.length;
+          chunks.push(value)
+          loadedSize += value.length
           if (totalSize > 0) {
-            const progress = Math.round((loadedSize / totalSize) * 100);
-            setDownloadProgress(progress);
+            const progress = Math.round((loadedSize / totalSize) * 100)
+            setDownloadProgress(progress)
           }
         }
 
-        setDownloadProgress(100);
+        setDownloadProgress(100)
 
-        // Crear el Blob
-        const blob = new Blob(chunks, { type: contentType });
-        
-        // Usar el método del enlace para descargar el Blob
-        objectUrl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = objectUrl;
-        a.download = fileName;
-        document.body.appendChild(a); // Append to body to ensure click works in all browsers
-        a.click();
-        document.body.removeChild(a); // Clean up link
+        const blob = new Blob(chunks, { type: doc.type })
+        objectUrl = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = objectUrl
+        a.download = doc.name
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
 
         toast({
           title: 'Éxito',
           description: 'Documento descargado correctamente'
         })
-
       } catch (error) {
-        if (mobileTab && !mobileTab.closed) {
-          mobileTab.close()
-        }
         console.error('Error al descargar el documento:', error)
         toast({
           variant: 'destructive',
@@ -142,9 +125,9 @@ export default function DocumentComponent({ document: doc, isAdmin }: Props) {
         })
       } finally {
         if (objectUrl) {
-           window.URL.revokeObjectURL(objectUrl); // Clean up Object URL
+          window.URL.revokeObjectURL(objectUrl)
         }
-        setTimeout(() => setDownloadProgress(null), 1000);
+        setTimeout(() => setDownloadProgress(null), 1000)
       }
     })
   }
